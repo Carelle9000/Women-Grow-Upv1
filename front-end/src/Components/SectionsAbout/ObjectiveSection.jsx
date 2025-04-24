@@ -304,30 +304,39 @@ function ObjectiveSection() {
             </div>
           </div>
         </div>
-        <h2 className="mt-20 text-3xl font-bold leading-none text-fuchsia-700 max-md:mt-10 max-md:max-w-full max-md:text-4xl">
-          Nos anciens membres
-        </h2>
-        <div className="flex gap-2">
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/4e6090bf87b1ef3dcc2c4945e07d86c5acd72ede?placeholderIfAbsent=true"
-          alt="Former member"
-          className="object-contain mt-20 max-w-full aspect-[1.39] w-[180px] max-md:mt-10"
-        />
-        <p>
-            <h3 className="text-fuchsia-500" > Ms.Phmizele Mlambo-Ngucka</h3>
-            Former Executive Director of UN WomenFormer <br /> Under-Secretary-General of the United Nation
-        </p>
-        </div>
-        <div className="flex flex-row gap-2">
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/ac337c87b27ab081d5b3048e36e4679155a44a4d?placeholderIfAbsent=true"
-          alt="Former member"
-          className="object-contain mt-11 max-w-full aspect-[1.49] w-[180px] max-md:mt-10"
-        />
-        <p className="mb-10">
-            <h3 className="text-fuchsia-500" > Ms.Michelle Bachelet</h3>
-            Former Executive Director of UN Women <br />Former Under-Secretary-General of the United Nations        </p>
-        </div>
+        </section>
+        <section className="ml-23">
+                <h2 className="mt-20 text-3xl font-bold leading-none text-fuchsia-700 max-md:mt-10 max-md:max-w-full max-md:text-4xl">
+                Nos anciens membres
+                </h2>
+
+                <div className="flex flex-col gap-10 mt-10 max-md:mt-5">
+                <div className="flex items-start gap-4">
+                    <img
+                    src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/4e6090bf87b1ef3dcc2c4945e07d86c5acd72ede?placeholderIfAbsent=true"
+                    alt="Former member Ms. Phmizele Mlambo-Ngucka"
+                    className="object-contain w-[180px] max-md:w-[150px]"
+                    />
+                    <div>
+                    <h3 className="text-fuchsia-700 text-lg font-semibold">Ms. Phmizele Mlambo-Ngucka</h3>
+                    <p>Former Executive Director of UN Women</p>
+                    <p>Former Under-Secretary-General of the United Nations</p>
+                    </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                    <img
+                    src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/ac337c87b27ab081d5b3048e36e4679155a44a4d?placeholderIfAbsent=true"
+                    alt="Former member Ms. Michelle Bachelet"
+                    className="object-contain w-[180px] max-md:w-[150px]"
+                    />
+                    <div>
+                    <h3 className="text-fuchsia-700 text-lg font-semibold">Ms. Michelle Bachelet</h3>
+                    <p>Former Executive Director of UN Women</p>
+                    <p>Former Under-Secretary-General of the United Nations</p>
+                    </div>
+                </div>
+                </div>
       </section>
 
       
