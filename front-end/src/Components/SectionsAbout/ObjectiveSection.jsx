@@ -79,22 +79,22 @@ function ObjectiveSection() {
         <img
           src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/03de6eb0d69e24c8142125b37a287565ddc6f410?placeholderIfAbsent=true"
           alt="Women empowerment illustration"
-          className="object-contain shrink-0 self-end mt-16 max-w-full aspect-[0.29] w-[201px] max-md:mt-10"
+          className="object-contain shrink-0 self-end mt-16 max-w-full aspect-[0.29] w-[201px] max-md:mt-10 transition-transform duration-300 transform hover:scale-105 "
         />
         <img
           src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/bb158d337af8baa43b1f4cb8bd94dd879890a1e9?placeholderIfAbsent=true"
           alt="Women empowerment illustration"
-          className="object-contain shrink-0 max-w-full aspect-[0.29] w-[200px]"
+          className="object-contain shrink-0 max-w-full aspect-[0.29] w-[200px] transition-transform duration-300 transform hover:scale-105"
         />
         <img
           src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/f4ac4e3104648bf686cdf168bbbca997d3c1f593?placeholderIfAbsent=true"
           alt="Women empowerment illustration"
-          className="object-contain shrink-0 self-end mt-16 max-w-full aspect-[0.29] w-[201px] max-md:mt-10"
+          className="object-contain shrink-0 self-end mt-16 max-w-full aspect-[0.29] w-[201px] max-md:mt-10 transition-transform duration-300 transform hover:scale-105"
         />
         <img
           src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/0a2a6f383b5e3eedd9626fda0ae06d1ecbac816d?placeholderIfAbsent=true"
           alt="Women empowerment illustration"
-          className="object-contain shrink-0 max-w-full aspect-[0.29] w-[200px]"
+          className="object-contain shrink-0 max-w-full aspect-[0.29] w-[200px] transition-transform duration-300 transform hover:scale-105"
         />
       </div>
 
@@ -105,7 +105,7 @@ function ObjectiveSection() {
         <img
           src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/82d19c0366e756a73cf1df9cbc61b5d2ab8d91f0?placeholderIfAbsent=true"
           alt="Background"
-          className="object-cover absolute inset-0 size-full py-10 z-10"
+          className="object-cover absolute inset-0 size-full py-10 z-10 transition-transform duration-300 transform hover:scale-105"
         />
         <div className="relative px-20 py-7.5 bg-black/50 max-md:px-5 max-md:-mr-0.5 max-md:max-w-full z-30 mt-10">
           <div className="flex gap-5 max-md:flex-col ">
@@ -159,28 +159,28 @@ function ObjectiveSection() {
               <img
                 src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/32ebfa7a7be2431b509ad80d109dca8ac5a4c020?placeholderIfAbsent=true"
                 alt="Team member"
-                className="object-contain grow shrink-0 max-w-full rounded-3xl aspect-[0.59] w-[268px] max-md:mt-10"
+                className="object-contain grow shrink-0 max-w-full rounded-3xl aspect-[0.59] w-[268px] max-md:mt-10 transition-transform duration-300 transform hover:scale-105"
               />
             </div>
             <div className="ml-5 w-3/12 max-md:ml-0 max-md:w-full">
               <img
                 src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/9fff1fa0751b62349046209ab9007df7e573f1d8?placeholderIfAbsent=true"
                 alt="Team member"
-                className="object-contain grow shrink-0 max-w-full rounded-3xl aspect-[0.59] w-[268px] max-md:mt-10"
+                className="object-contain grow shrink-0 max-w-full rounded-3xl aspect-[0.59] w-[268px] max-md:mt-10 transition-transform duration-300 transform hover:scale-105"
               />
             </div>
             <div className="ml-5 w-3/12 max-md:ml-0 max-md:w-full">
               <img
                 src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/55dbe08125ed54cfd2d10cd4f65d2f564cd81b31?placeholderIfAbsent=true"
                 alt="Team member"
-                className="object-contain grow shrink-0 max-w-full rounded-3xl aspect-[0.59] w-[268px] max-md:mt-10"
+                className="object-contain grow shrink-0 max-w-full rounded-3xl aspect-[0.59] w-[268px] max-md:mt-10 transition-transform duration-300 transform hover:scale-105"
               />
             </div>
             <div className="ml-5 w-3/12 max-md:ml-0 max-md:w-full">
               <img
                 src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/83017adf8b8604f88139d7ec8d6559954127b38c?placeholderIfAbsent=true"
                 alt="Team member"
-                className="object-contain grow shrink-0 max-w-full rounded-3xl aspect-[0.59] w-[268px] max-md:mt-10"
+                className="object-contain grow shrink-0 max-w-full rounded-3xl aspect-[0.59] w-[268px] max-md:mt-10 transition-transform duration-300 transform hover:scale-105"
               />
             </div>
           </div>
@@ -315,7 +315,7 @@ function ObjectiveSection() {
                     <img
                     src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/4e6090bf87b1ef3dcc2c4945e07d86c5acd72ede?placeholderIfAbsent=true"
                     alt="Former member Ms. Phmizele Mlambo-Ngucka"
-                    className="object-contain w-[180px] max-md:w-[150px]"
+                    className="object-contain w-[180px] max-md:w-[150px] transition-transform duration-300 transform hover:scale-105"
                     />
                     <div>
                     <h3 className="text-fuchsia-700 text-lg font-semibold">Ms. Phmizele Mlambo-Ngucka</h3>
@@ -328,7 +328,7 @@ function ObjectiveSection() {
                     <img
                     src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/ac337c87b27ab081d5b3048e36e4679155a44a4d?placeholderIfAbsent=true"
                     alt="Former member Ms. Michelle Bachelet"
-                    className="object-contain w-[180px] max-md:w-[150px]"
+                    className="object-contain w-[180px] max-md:w-[150px] transition-transform duration-300 transform hover:scale-105"
                     />
                     <div>
                     <h3 className="text-fuchsia-700 text-lg font-semibold">Ms. Michelle Bachelet</h3>

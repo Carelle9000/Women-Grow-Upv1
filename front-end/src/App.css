@@ -1,16 +1,16 @@
 @import "tailwindcss";
-@font-face {
+{/*@font-face {
   font-family: 'Tienne';
-  src: url('/fonts/Tienne-Regular.ttf') format('truetype'); /* Adapte le chemin et le format */
+  src: url('/fonts/Tienne-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 
 }
-
+*/}/*
 @font-face {
   font-family: 'Tienne';
-  src: url('/fonts/Tienne-Bold.ttf') format('truetype');
+  src: url('/fonts/Tienne-normal.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -20,3 +20,4 @@
   font-family: 'Tienne', serif;
 
 }
+*/

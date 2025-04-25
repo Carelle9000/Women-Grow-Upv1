@@ -1,19 +1,26 @@
 import React from "react";
-import Login from "./pages/Login"; // ajuste le chemin si nécessaire
+import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Home from "./pages/Home"; // ajuste le chemin si nécessaire
+import Home from "./pages/Home";
 import About from "./pages/About";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
-import MainContent from "./Components/SectionsHome/Herosection";
-import HeroSection from "./Components/SectionsHome/Herosection";
-import TripleEnjeusection from "./Components/SectionsHome/TripleEnjeuSection";
-import ActualitesSection from "./Components/SectionsHome/ActualitesSection";
-import RealisationsSection from "./Components/SectionsHome/RealisationsSection";
-import TemoignagesSection from "./Components/SectionsHome/TemoignagesSection";
+import Contact from "./pages/Contact";
+import { Routes, Route } from 'react-router-dom'; // pas besoin de BrowserRouter ici
+import MainLayout from "./layouts/MainLayout";
+import Blog from "./pages/Blog";
 
 const App = () => {
-  return <About />;
+  return (
+    <MainLayout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="Contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+    </MainLayout>
+  );
 };
 
 export default App;

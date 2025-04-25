@@ -18,7 +18,9 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'title' => 'required_without:media',
             'content' => 'required_without:media',
+        
             'media' => 'required_without:content|file|mimes:jpg,jpeg,png,mp4,mov,avi|max:20480' // 20MB max
         ]);
 
@@ -85,13 +87,14 @@ class PostController extends Controller
     {
         // Validation simple sans vérification de permission
         $request->validate([
+            'title' => 'required_without:media',
             'content' => 'required_without:media',
             'media' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov,avi|max:20480'
         ]);
 
         // Mise à jour du contenu
         $post->content = $request->input('content', $post->content);
-
+        $post->title = $request->input('title', $post->title);
         // Gestion du média
         if ($request->hasFile('media')) {
             // Suppression ancien média

@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@sanity/client": "^6.29.1",
     "@tailwindcss/vite": "^4.1.4",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.5",
+    "framer-motion": "^12.9.1",
     "lucide-react": "^0.503.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",

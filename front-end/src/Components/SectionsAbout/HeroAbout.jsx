@@ -1,15 +1,14 @@
 "use client";
-import React from "react";
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import BlogCard from "../Components/SectionBlog/BlogCard";
-import AuthorInfo from "../Components/SectionBlog/AuthorInfo";
+import * as React from "react";
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Menu, X } from "lucide-react"; // icônes burger
+//import HeroSection from "./SectionsHome/Herosection";
 import momo from "@/assets/images/momo.png";
-import Footer from "../Components/Footer"
 
-const Blog = () => {    
+
+function HeroAbout() {
+  
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate(); // Utilisation de useNavigate
 
@@ -18,19 +17,17 @@ const Blog = () => {
   const goToLogin = () => {
     navigate("/Login"); // Utilisation de navigate pour aller à la page de login
   };
-  return (
-    <main className="flex flex-col bg-indigo-50">
-            {/*Header*/}
 
-         <nav aria-label="Main Navigation bg-transparent">
+  return (
+    <nav aria-label="Main Navigation bg-transparent h-[200px]">
       <link
         href="https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400&family=Tienne:wght@700&display=swap"
         rel="stylesheet"
       />
-      <div className="flex justify-between items-center px-9 py-1 mx-auto my-0 w-full  max-md:flex-col max-md:items-start max-sm:px-5 max-sm:py-1 bg-transparent absolute z-20">
+      <div className="flex justify-between items-center px-9 py-1 mx-auto my-0 w-full  max-md:flex-col max-md:items-start max-sm:px-5 max-sm:py-1 bg-transparent absolute z-20 ">
         <img
           src={momo}
-          className="h-[103px] w-[289px]"
+          className="h-[96px] w-[289px]"
           alt="Logo"
         />
 
@@ -53,7 +50,7 @@ const Blog = () => {
           <a href="#acceuil" className="text-white " role="menuitem">
             Acceuil
           </a>
-          <a href="#a-propos" className=" text-white" role="menuitem">
+          <a href="#a-propos" className=" text-fuchsia-500" role="menuitem">
             A Propos
           </a>
           <a href="#blog" className=" text-white" role="menuitem">
@@ -68,7 +65,7 @@ const Blog = () => {
           <a href="#forum" className=" text-white" role="menuitem">
             Forum
           </a>
-          <a href="#contact" className=" text-fuchsia-500" role="menuitem">
+          <a href="#contact" className=" text-white" role="menuitem">
             Contact
           </a>
         </div>
@@ -84,41 +81,18 @@ const Blog = () => {
         </button>
       </div>
       <div className="z-10">
-          {/* Hero Section */}
-                        <header className="relative h-[500px] text-white w-full">
-                {/* Image de fond */}
-                <img
-                    src="./src/assets/images/Contactimage.jpg"
-                    alt="Blog hero background"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                />
-
-                {/* Overlay noir semi-transparent */}
-                <div className="absolute inset-0 bg-black/60 z-10" />
-
-                {/* Contenu texte */}
-                <div className="relative z-20 flex flex-col justify-center items-center h-full px-6 text-center">
-                    <div className="max-w-4xl w-full space-y-6">
-                    <h1 className="text-4xl font-bold max-md:text-2xl">
-                        Contactez-nous !!
-                    </h1>
-                    <p className="text-lg max-md:text-base">
-                        Nous sommes à votre écoute pour répondre à vos questions,
-                        vous accompagner dans vos projets ou simplement échanger avec vous.
-                        N’hésitez pas à nous contacter, nous reviendrons vers vous au plus vite.
-                    </p>
-                    </div>
-                </div>
-                </header>
-
+      <div className="z-20 h-200">
+      <img
+        src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/9d9284997c990f0525fb7904a26529fb932d3c74?placeholderIfAbsent=true"
+        alt="Header background"
+        className="object-cover absolute inset-0 size-full"
+      />
+      </div>
+      <div className="absolute top-0 left-0 w-full h-full bg-black/40 z-10" />
       </div>
     </nav>
     
-
-    
-     <Footer />
-    </main>
   );
-};
+}
 
-export default Blog;
+export default HeroAbout;

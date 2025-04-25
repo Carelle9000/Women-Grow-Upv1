@@ -63,9 +63,8 @@ const ActualitesSection = () => {
                 </h3>
                 <p className="text-gray-600 mt-2">{item.description}</p>
                 <button
-                  onClick={() => navigate(item.lien)}
+                  onClick={() => window.location.href = "https://cameroonceo.com/2025/03/10/la-journee-internationale-de-la-femme-au-cameroun-en-2025-le-potentiel-economique-des-femmes-camerounaises-sous-les-projecteurs/"}
                   className="mt-4 px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-800 transition"
-                  href={item.lien}
                 >
                   Découvrir
                 </button>
@@ -94,7 +93,7 @@ const ActualitesSection = () => {
                 </h3>
                 <p className="text-gray-600 mt-2">{item.description}</p>
                 <button
-                  onClick={() => navigate(item.lien)}
+                  onClick={() => window.location.href = "https://cameroonceo.com/2025/03/10/la-journee-internationale-de-la-femme-au-cameroun-en-2025-le-potentiel-economique-des-femmes-camerounaises-sous-les-projecteurs/"}
                   className="mt-4 px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-800 transition"
                   href={item.lien}
 

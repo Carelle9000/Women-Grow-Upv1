@@ -190,9 +190,7 @@ function Footer() {
         {/* Bottom section with copyright and links */}
         <section className="flex flex-wrap gap-5 justify-between mt-20 w-full text-base text-white max-w-[1192px] max-md:mt-10 max-md:max-w-full">
           <div className="flex flex-wrap gap-10">
-            <p className="flex-auto my-auto">
-              © 2024 Women Grow Up. All rights reserved.
-            </p>
+            
             <button
               className="flex gap-2 px-4 py-2 font-bold text-center whitespace-nowrap bg-pink-500 rounded-md hover:bg-pink-600 transition-colors"
               aria-label="Report an issue"
@@ -216,7 +214,11 @@ function Footer() {
               Cookie Policy
             </a>
           </nav>
+          
         </section>
+        <p className="flex-auto my-auto text-white text-base text-center mt-10 max-md:mt-5">
+              © 2024 Women Grow Up. All rights reserved.
+            </p>
       </footer>
     </div>
   );
