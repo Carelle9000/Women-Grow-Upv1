@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\API\ReportController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -94,3 +95,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/reports', [ReportController::class, 'index']);
 Route::get('/reports/{id}', [ReportController::class, 'show']);
+
+// Routes pour le formulaire de contact
+Route::post('/contact', [MessageController::class, 'store']);
