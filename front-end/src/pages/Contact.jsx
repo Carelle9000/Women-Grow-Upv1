@@ -1,15 +1,13 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import BlogCard from "../Components/SectionBlog/BlogCard";
-import AuthorInfo from "../Components/SectionBlog/AuthorInfo";
+import Contactsection from "../Components/Contactsection";
 import { useNavigate } from 'react-router-dom';
 import { Menu, X } from "lucide-react"; // icônes burger
 import momo from "@/assets/images/momo.png";
 import Footer from "../Components/Footer"
 
-const Blog = () => {    
+const Contact = () => {    
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate(); // Utilisation de useNavigate
 
@@ -98,7 +96,7 @@ const Blog = () => {
 
                 {/* Contenu texte */}
                 <div className="relative z-20 flex flex-col justify-center items-center h-full px-6 text-center">
-                    <div className="max-w-4xl w-full space-y-6">
+                    <div className="max-w-4xl w-full mt-40 space-y-6">
                     <h1 className="text-4xl font-bold max-md:text-2xl">
                         Contactez-nous !!
                     </h1>
@@ -110,15 +108,34 @@ const Blog = () => {
                     </div>
                 </div>
                 </header>
-
       </div>
+      
     </nav>
+    <div className="-mt-25 z-20">
+    <Contactsection />
+      </div>
+      <div className="w-full mt-7 mb-10 px-4 border-rounded-3xl shadow-2xl">
+  <iframe 
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7959.687815939688!2d9.69469177238176!3d4.052240829790386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1061138b8984d0cb%3A0xe4fc92a7a6d64505!2sIncH%20Class!5e0!3m2!1sfr!2scm!4v1745589905105!5m2!1sfr!2scm" 
+    width="100%" 
+    height="450" 
+    style={{ 
+      border: 0, 
+      borderRadius: '15px', // Pour arrondir les bords
+      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', // Pour ajouter l'ombre
+      margin: '5 auto', // Pour centrer l'élément
     
+    }} 
+    allowFullScreen="" 
+    loading="lazy" 
+    referrerPolicy="no-referrer-when-downgrade">
+  </iframe>
+</div>
 
-    
+
      <Footer />
     </main>
   );
 };
 
-export default Blog;
+export default Contact;
