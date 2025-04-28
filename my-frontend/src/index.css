@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+
+@font-face {
+  font-family: 'Tienne';
+ // font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tienne';
+  //font-weight: bold;
+  font-style: normal;
+}
+*{
+  font-family: 'Tienne';
+  //font-weight: bold;
+  font-style: normal;
+}
+
+
+
+body {
+  font-family: 'Tienne', serif;
+}

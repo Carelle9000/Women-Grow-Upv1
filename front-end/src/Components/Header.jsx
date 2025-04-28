@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { Link } from 'react-router-dom';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Menu, X } from "lucide-react"; // icônes burger
@@ -15,7 +16,7 @@ function Header() {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const goToLogin = () => {
-    navigate("/Login"); // Utilisation de navigate pour aller à la page de login
+    navigate("/login"); // Utilisation de navigate pour aller à la page de login
   };
 
   return (
@@ -34,7 +35,7 @@ function Header() {
         {/* Toggle Button (Mobile only) */}
         <button
           onClick={toggleMenu}
-          className="text-white text-2xl md:hidden"
+          className="text-white text-xl right-4 md:hidden"
           aria-label="Toggle Menu"
         >
           {menuOpen ? <X size={32} /> : <Menu size={32} />}
@@ -44,30 +45,37 @@ function Header() {
         <div
           className={`${
             menuOpen ? "flex flex-col w-full mt-4" : "hidden"
-          } md:flex gap-5 md:flex-row md:items-center md:gap-5`}
+          } transition-all duration-300 ease-in-out md:flex gap-5 md:flex-row md:items-center md:gap-5`}
           role="menubar"
         >
-          <a href="#acceuil" className="  text-fuchsia-500" role="menuitem">
-            Acceuil
-          </a>
-          <a href="#a-propos" className=" text-white" role="menuitem">
-            A Propos
-          </a>
-          <a href="#blog" className=" text-white" role="menuitem">
-            Blog
-          </a>
-          <a href="#digithek" className=" text-white" role="menuitem">
-            Digithek
-          </a>
-          <a href="#cours" className=" text-white" role="menuitem">
-            Cours
-          </a>
-          <a href="#forum" className=" text-white" role="menuitem">
-            Forum
-          </a>
-          <a href="#contact" className=" text-white" role="menuitem">
-            Contact
-          </a>
+        <Link to="/" className="text-fuchsia-500" role="menuitem">
+          Accueil
+        </Link>
+        <Link to="/a-propos"   className="text-white hover:text-fuchsia-500 transition-colors duration-300 transform hover:scale-105"
+            role="menuitem">
+          A Propos
+        </Link>
+        <Link to="/blog"   className="text-white hover:text-fuchsia-500 transition-colors duration-300 transform hover:scale-105"
+           role="menuitem">
+          Blog
+        </Link>
+        <Link to="/digithek"   className="text-white hover:text-fuchsia-500 transition-colors duration-300 transform hover:scale-105"
+            role="menuitem">
+          Digithek
+        </Link>
+        <Link to="/cours"   className="text-white hover:text-fuchsia-500 transition-colors duration-300 transform hover:scale-105"
+             role="menuitem">
+          Cours
+        </Link>
+        <Link to="/forum"   className="text-white hover:text-fuchsia-500 transition-colors duration-300 transform hover:scale-105"
+         role="menuitem">
+          Forum
+        </Link>
+        <Link to="/contact"   className="text-white hover:text-fuchsia-500 transition-colors duration-300 transform hover:scale-105"
+          role="menuitem">
+          Contact
+        </Link>
+
         </div>
 
         {/* Mon Compte Button */}
