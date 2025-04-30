@@ -8,6 +8,10 @@ use App\Http\Controllers\ForumController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\API\ReportController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\MessageUserController;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\Api\ConversationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -63,7 +67,7 @@ Route::prefix('forum')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [ForumController::class, 'store']);
         Route::post('/{thematic}/close', [ForumController::class, 'close']);
-        Route::post('/{thematic}/replies', [ForumController::class, 'storeReply']);
+        Route::post('/{slug}/replies', [ForumController::class, 'storeReplyBySlug']);
         Route::post('/forum/{thematic}/users', [ForumController::class, 'addUsers']);
         Route::delete('/{thematic}', [ForumController::class, 'destroy']);           // Supprimer un sujet    
          Route::put('/replies/{reply}', [ForumController::class, 'updateReply']);    // Modifier une réponse
@@ -98,3 +102,22 @@ Route::get('/reports/{id}', [ReportController::class, 'show']);
 
 // Routes pour le formulaire de contact
 Route::post('/contact', [MessageController::class, 'store']);
+
+//routes pour les conversations
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/conversations', [ConversationController::class, 'index'])->name('conversations.index');
+    Route::post('/conversations', [ConversationController::class, 'store'])->name('conversations.store');
+    Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->name('conversations.show');
+    Route::put('/conversations/{conversation}', [ConversationController::class, 'update'])->name('conversations.update');
+    Route::delete('/conversations/{conversation}', [ConversationController::class, 'destroy'])->name('conversations.destroy');
+});
+
+Route::middleware('auth:sanctum')->get('/messages', [ConversationController::class, 'index']);
+
+// routes pour les messsages entre les utilisateurs
+Route::get('/members', [MemberController::class, 'index']);
+Route::middleware('auth:sanctum')->post('/messages', [MessageUserController::class, 'storeChat']);
+Route::get('/messages/{recipientId}', [MessageUserController::class, 'show']);
+
+//routes pour les sessions
+Route::get('/sessions', [SessionController::class, 'index'])->middleware('auth:sanctum');

@@ -1,42 +1,50 @@
-import React from "react";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Forum from "./pages/Forum";
-import { Routes, Route } from 'react-router-dom'; // pas besoin de BrowserRouter ici
-import MainLayout from "./layouts/MainLayout";
-import Blog from "./pages/Blog";
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout';
+import DashboardLayout from './layouts/DashboardLayout';
+import Home from './pages/Home';
+import About from './pages/About';
+import Blog from './pages/Blog';
+import Contact from './pages/Contact';
+import Forum from './pages/Forum';
+import Digithek from './pages/Digithek';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import Report from './pages/Report';
+import MembersPage from './Components/SectionForum/MembersPage';
+import NotFound from './pages/NotFound';
 import PrivateRoute from './PrivateRoute';
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
-import Profile from "./pages/Profile";
-import Report from "./pages/Report";
-
-
-
+import  Calendar  from './pages/TaskCalendar';
 
 const App = () => {
   return (
     <MainLayout>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Forum" element={<Forum />} />
+        <Route path="/digithek" element={<Digithek />} />
         <Route path="/login" element={<Login />} />
-         {/* Route protégée pour le dashboard */}
-         <Route element={<PrivateRoute />}>
-             <Route path="/dashboard" element={<Dashboard />} />
-        </Route>       
         <Route path="/signup" element={<Signup />} />
-        <Route path="/Profile" element={<Profile />} />
-        <Route path="/report" element={<Report />} />
-        {/* 404 Not Found route */}
-        <Route path="*" element={<NotFound />} />
 
+        {/* Protected Routes */}
+        <Route element={<PrivateRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/memberspage" element={<MembersPage />} />
+            <Route path="/report" element={<Report />} />
+            <Route path="/calendar" element={<Calendar />} />
+          </Route>
+        </Route>
+
+        {/* 404 Not Found */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </MainLayout>
   );

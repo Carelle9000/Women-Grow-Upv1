@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useNavigate } from "react-router-dom"; // pour la redirection
-import womanImage from "@/assets/images/heroimage.png";
+import womanImage from "@/assets/images/femme4.jpeg";
 
 function HeroSection() {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ function HeroSection() {
       />
 
       {/* Overlay noir semi-transparent */}
-      <div className="absolute top-0 left-0 w-full h-full bg-black/40 z-10" />
+      <div className="absolute top-0 left-0 w-full h-full bg-black/30 z-10" />
 
       {/* Contenu */}
       <div className="relative z-20 flex flex-col justify-center items-end h-full px-12 max-md:px-8 max-sm:px-5">

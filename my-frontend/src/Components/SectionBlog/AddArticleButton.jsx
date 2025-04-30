@@ -42,7 +42,7 @@ export default function AddArticleButton() {
     <>
       <button
         onClick={handleOpen}
-        className="fixed bottom-8 right-8 bg-fuchsia-500 hover:bg-fuschia-600 text-white font-medium py-3 px-4 rounded-full flex items-center shadow-lg transition-all duration-300"
+        className=" sticky bottom-8 right-8 bg-fuchsia-500 hover:bg-fuschia-600 text-white font-medium py-2 px-4 rounded-lg flex items-center shadow-lg transition-all duration-300"
       >
         <Plus size={20} className="mr-2" />
         Ajouter un article

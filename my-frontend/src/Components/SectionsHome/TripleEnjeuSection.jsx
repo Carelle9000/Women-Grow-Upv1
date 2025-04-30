@@ -32,10 +32,10 @@ const TripleEnjeuSection = () => {
   );
 
   return (
-    <section className="px-10 py-16 bg-indigo-50 text-white font-Tienne justify-center pl-20 pr-0">
-      <h2 className="text-4xl font-bold text-fuchsia-600 mb-12">Un triple enjeu</h2>
+    <section className="px-10 py-16 bg-indigo-50 text-white font-Tienne justify-center  pr-4">
+      <h2 className="text-2xl font-bold text-fuchsia-600 ml-6 mb-8">Un triple enjeu</h2>
 
-      <div className="flex flex-wrap gap-21">
+      <div className="flex flex-wrap gap-10 justify-center items-center pr-4">
         {activeBlock === "economique"
           ? renderFullBlock(
               "Économique",

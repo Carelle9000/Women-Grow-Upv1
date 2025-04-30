@@ -51,6 +51,8 @@ function Footer() {
           </div>
         </div>
 
+        
+
         <hr className="border-t border-white/30 mb-4" /> {/* Reduced margin */}
 
         {/* Main Content */}
@@ -58,7 +60,7 @@ function Footer() {
           {/* Navigation Links */}
           <div>
             <h3 className="text-lg font-semibold text-white mb-2">Liens de Navigation</h3> {/* Reduced margin */}
-            <ul className="space-y-2"> {/* Reduced space */}
+            <ul className="space-y-2 "> {/* Reduced space */}
               {[
                 { path: "/", label: "Accueil" },
                 { path: "/about", label: "A Propos" },
@@ -71,8 +73,9 @@ function Footer() {
                   <Link 
                     to={link.path} 
                     onClick={closeMenu} 
-                    className="text-white hover:text-fuchsia-300 text-sm transition font-normal"
+                    className="text-white hover:text-purple-800 text-sm transition font-normal "
                   >
+                    
                     {link.label}
                   </Link>
                 </li>
@@ -94,7 +97,7 @@ function Footer() {
                 <li key={link.href}>
                   <a 
                     href={link.href} 
-                    className="text-white hover:text-fuchsia-300 text-sm font-normal"
+                    className="text-white hover:text-purple-900 text-sm font-normal"
                   >
                     {link.label}
                   </a>

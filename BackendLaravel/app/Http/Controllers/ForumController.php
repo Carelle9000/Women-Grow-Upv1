@@ -148,6 +148,37 @@ public function destroy(Thematic $thematic)
     ]);
 }
 
+public function storeReplyBySlug(Request $request, $slug)
+{
+    $thematic = Thematic::where('slug', $slug)->firstOrFail();
+
+    if (!$thematic->is_open) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Ce débat est clos'
+        ], 403);
+    }
+
+    $request->validate([
+        'content' => 'required|string|min:5',
+        'parent_id' => 'nullable|exists:replies,id',
+    ]);
+
+    $reply = Reply::create([
+        'content' => $request->content,
+        'thematic_id' => $thematic->id,
+        'user_id' => auth()->id(),
+        'parent_id' => $request->parent_id
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Réponse ajoutée',
+        'data' => $reply
+    ], 201);
+}
+
+
 /**
  * Modifie une réponse (PUT /api/forum/replies/{reply})
  */

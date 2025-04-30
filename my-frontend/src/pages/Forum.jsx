@@ -6,7 +6,8 @@ import ForumSection from "../Components/SectionForum/ForumSection";
 import CallToActionSection from "../Components/SectionForum/CallToActionSection";
 import RecentDiscussions from "../Components/SectionForum/RecentDiscussions";
 import Footer from "../Components/Footer";
-import MembersPage from "../Components/SectionForum/MembersPage";
+// Import ScrollToTop component
+import ScrollToTop from "@/Components/ScrollToTop";
 
 const fakeMembers = [
   { id: 1, name: "Alice" },
@@ -46,25 +47,27 @@ function Forum() {
   };
 
   return (
-    <div className="bg-roseClair  bg-indigo-50">
+    <div className="bg-roseClair bg-indigo-50">
       {/* Header */}
-      <Header  className="z-20"/>
+      <Header className="z-20"/>
       
       {/*section Hero*/}
       <HeroSection className="z-10"/>
-
+      
       {/*ForumSection*/}
       <ForumSection />
 
+       {/*Recent Discussion*/}
+       <RecentDiscussions />
+      
       {/*Call to Action*/}
       <CallToActionSection />
-
-      {/*Recent Discussion*/}
-      <RecentDiscussions />
-      <MembersPage />
-     {/* Footer */}
-       <Footer />     
-
+      
+      {/* Footer */}
+      <Footer />
+      
+      {/* Add the ScrollToTop component */}
+      <ScrollToTop />
     </div>
   );
 }

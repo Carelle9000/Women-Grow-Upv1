@@ -157,8 +157,8 @@ function TestimonialCarousel() {
   return (
     <>
       <FontProvider />
-      <section className="box-border flex flex-col justify-center items-center p-5 mx-auto my-0 w-full max-w-[1359px] max-md:max-w-[991px] max-sm:max-w-screen-sm mb-10">
-        <h2 className="mb-5 text-4xl font-bold text-fuchsia-600 left max-sm:text-4xl">
+      <section className="box-border flex flex-col  items-center p-5 mx-auto my-0 w-full max-w-[1359px] max-md:max-w-[991px] max-sm:max-w-screen-sm mb-10">
+        <h2 className=" text-2xl  mb-4 font-bold text-fuchsia-600 left max-sm:text-2xl">
           Temoignages
         </h2>
         <TestimonialCard

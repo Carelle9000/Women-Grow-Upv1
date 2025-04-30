@@ -41,7 +41,7 @@ const ActualitesSection = () => {
 
   return (
     <section className="py-12 px-4 bg-indigo-50 pl-20 pr-20">
-      <h2 className="text-4xl font-bold text-fuchsia-600 mb-8">Actualités</h2>
+      <h2 className="text-2xl font-bold text-fuchsia-600 mb-8">Actualités</h2>
 
       {/* Grande carte principale */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">

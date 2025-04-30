@@ -50,7 +50,7 @@ function HeroSection() {
         </motion.p>
 
         <motion.button
-            className="mt-4 md:mt-0 bg-fuchsia-700 hover:bg-fuchsia-800 text-white py-1.5 text-sm px-5 rounded-2xl transition-transform transform hover:scale-105"
+            className="mt-4 md:mt-0 bg-fuchsia-700 hover:bg-fuchsia-800 text-white py-1.5 text-sm px-5 rounded-lg transition-transform transform hover:scale-105"
             variants={itemVariants}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}

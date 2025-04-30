@@ -8,6 +8,7 @@ import { Menu, X } from "lucide-react"; // icônes burger
 import momo from "@/assets/images/momo.png";
 import Footer from "../Components/Footer"
 import Header from "../Components/Header";
+import ScrollToTop from "@/Components/ScrollToTop";
 
 const Contact = () => {    
  const [menuOpen, setMenuOpen] = useState(false);
@@ -85,6 +86,7 @@ const Contact = () => {
 
 
      <Footer />
+     <ScrollToTop />
     </main>
   );
 };

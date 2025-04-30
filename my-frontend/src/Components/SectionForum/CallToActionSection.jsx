@@ -36,7 +36,9 @@ function CallToActionSection() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
+          <a href="/memberspage" >
           Commencer Maintenant
+          </a>
         </motion.button>
       </div>
     </section>

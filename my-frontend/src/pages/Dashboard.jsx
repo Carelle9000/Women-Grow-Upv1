@@ -1,279 +1,435 @@
-"use client";
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import {
-  Home, Info, Book, Library, School, MessageSquare, Mail, User, LogOut 
+  Clock,
+  MessageCircle,
+  BookOpen,
+  Activity,
+  CalendarDays
 } from 'lucide-react';
-import { LineChart, Line, BarChart, Bar, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend
+} from 'recharts';
+import TaskCalendar from './TaskCalendar';
 
-// Données simulées pour les graphiques (à remplacer par les données de l'API)
-const messageData = [
-  { date: '2025-04-01', sent: 30, received: 45 },
-  { date: '2025-04-02', sent: 20, received: 35 },
-  { date: '2025-04-03', sent: 50, received: 60 },
-  { date: '2025-04-04', sent: 40, received: 55 },
-];
-
-const reportData = [
-  { date: '2025-04-01', reports: 5 },
-  { date: '2025-04-02', reports: 8 },
-  { date: '2025-04-03', reports: 3 },
-  { date: '2025-04-04', reports: 6 },
-];
-
-const forumData = [
-  { name: 'Posts', value: 120 },
-  { name: 'Comments', value: 300 },
-  { name: 'Likes', value: 200 },
-];
-
-// Données simulées pour les conversations
-const conversationData = [
-  { id: 1, name: 'Marie Dupont', lastInteraction: '2025-04-28 10:15' },
-  { id: 2, name: 'Sophie Martin', lastInteraction: '2025-04-27 14:30' },
-  { id: 3, name: 'Claire Dubois', lastInteraction: '2025-04-26 09:45' },
-];
-
-const COLORS = ['#6366F1', '#F472B6', '#FBB6CE'];
-
-const Sidebar = ({ setActiveSection }) => {
-  const menuItems = [
-    { name: 'Accueil', icon: Home, path: '/' },
-    { name: 'À propos', icon: Info, path: '/about', section: 'about' },
-    { name: 'Blog', icon: Book, path: '/blog', section: 'blog' },
-    { name: 'Digithek', icon: Library, path: '/digithek', section: 'digithek' },
-    { name: 'Cours', icon: School, path: '/courses', section: 'courses' },
-    { name: 'Forum', icon: MessageSquare, path: '/forum', section: 'forum' },
-    { name: 'Contact', icon: Mail, path: '/contact', section: 'contact' },
-    { name: 'Profil', icon: User, path: '/profile', section: 'profile' },
-  ];
-
-  return (
-    <div className="w-64 bg-indigo-100 h-screen p-5 flex flex-col justify-between">
-      <div>
-        <h1 className="text-2xl font-bold text-indigo-600 mb-10">Women Grow Up</h1>
-        <nav>
-          {menuItems.map((item) => (
-            <button
-              key={item.name}
-              onClick={() => setActiveSection(item.section)}
-              className="flex items-center w-full p-3 mb-2 text-indigo-800 hover:bg-indigo-200 rounded-lg transition"
-            >
-              <item.icon className="w-5 h-5 mr-3" />
-              <span>{item.name}</span>
-            </button>
-          ))}
-        </nav>
-      </div>
-      <button
-        onClick={() => {
-          // Intégration API logout
-          fetch('/logout', { method: 'POST' })
-            .then(() => console.log('Déconnexion réussie'))
-            .catch((err) => console.error('Erreur déconnexion:', err));
-        }}
-        className="flex items-center p-3 text-indigo-800 hover:bg-red-500 hover:text-white rounded-lg transition"
-      >
-        <LogOut className="w-5 h-5 mr-3" />
-        <span>Déconnexion</span>
-      </button>
-    </div>
-  );
+// Configuration des endpoints API
+// src/config/apiEndpoints.js
+const API_ENDPOINTS = {
+  USER_INFO: '/user',
+  SESSION_LOGS: '/sessions',
+  FORUM_ACTIVITY: '/forum',
+  MESSAGES: '/messages',
+  INTERACTIONS: '/conversations',
+  ARTICLES: '/posts',
+  EVENTS: '/events',
 };
 
-const Dashboard = () => {
-  // Données simulées pour l'utilisateur (à remplacer par un appel API)
-  const [user, setUser] = useState({
-    firstName: 'Jean',
-    profilePicture: 'https://via.placeholder.com/40',
-  });
-  
-  
-  // État pour la date du calendrier
-  const [calendarDate, setCalendarDate] = useState(new Date());
 
-  // État pour l'heure en temps réel
-  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+// Couleurs pour les graphiques
+const COLORS = ['#9c27b0', '#e91e63', '#5e35b1'];
 
-  // Mise à jour de l'heure chaque seconde
+// Données de secours (fallback) pour les graphiques
+const fallbackData = {
+  forumActivityData: [
+    { name: 'Lun', posts: 4 },
+    { name: 'Mar', posts: 6 },
+    { name: 'Mer', posts: 3 },
+    { name: 'Jeu', posts: 7 },
+    { name: 'Ven', posts: 5 },
+    { name: 'Sam', posts: 8 },
+    { name: 'Dim', posts: 2 },
+  ],
+  messageData: [
+    { name: 'Envoyés', value: 45 },
+    { name: 'Reçus', value: 32 },
+    { name: 'Non lus', value: 8 },
+  ],
+  interactions: [
+    { id: 1, name: 'Sophie Martin', photo: '/api/placeholder/48/48', lastMessage: '15 min' },
+    { id: 2, name: 'Marie Dupont', photo: '/api/placeholder/48/48', lastMessage: '1 jour' },
+    { id: 3, name: 'Jeanne Dubois', photo: '/api/placeholder/48/48', lastMessage: '2 jours' },
+    { id: 4, name: 'Lucie Bernard', photo: '/api/placeholder/48/48', lastMessage: '3 jours' },
+  ],
+  articles: [
+    { id: 1, title: 'Comment réussir sa vie professionnelle', readDate: '26 Avr 2025' },
+    { id: 2, title: 'Les défis du leadership au féminin', readDate: '24 Avr 2025' },
+    { id: 3, title: 'Équilibre vie pro/perso: mythes et réalités', readDate: '22 Avr 2025' },
+    { id: 4, title: 'Négocier son salaire efficacement', readDate: '20 Avr 2025' },
+  ],
+  sessionLogs: [
+    { date: '30 Avr 2025', duration: '45 min', activity: 'Forum, Articles' },
+    { date: '28 Avr 2025', duration: '32 min', activity: 'Messages, Événements' },
+    { date: '25 Avr 2025', duration: '58 min', activity: 'Forum, Profil' },
+  ],
+  events: [
+    { id: 1, title: 'Conférence Leadership', date: '12 Mai 2025', time: '14:00', location: 'Paris' },
+    { id: 2, title: 'Webinaire Gestion de Carrière', date: '15 Mai 2025', time: '18:30', location: 'En ligne' },
+    { id: 3, title: 'Atelier CV et LinkedIn', date: '20 Mai 2025', time: '10:00', location: 'Lyon' },
+    { id: 4, title: 'Networking Café', date: '25 Mai 2025', time: '19:00', location: 'Bordeaux' },
+  ]
+};
+
+export default function Dashboard() {
+  const [currentDate, setCurrentDate] = useState('');
+  const [currentTime, setCurrentTime] = useState('');
+  const [userInfo, setUserInfo] = useState({ name: 'Claire Dubois', photo: '/api/placeholder/40/40' });
+  const [sessionLogs, setSessionLogs] = useState(fallbackData.sessionLogs);
+  const [forumActivityData, setForumActivityData] = useState(fallbackData.forumActivityData);
+  const [messageData, setMessageData] = useState(fallbackData.messageData);
+  const [interactions, setInteractions] = useState(fallbackData.interactions);
+  const [articles, setArticles] = useState(fallbackData.articles);
+  const [events, setEvents] = useState(fallbackData.events);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000);
-    return () => clearInterval(timer);
+    // Format date to French locale
+    const formatDate = () => {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      setCurrentDate(now.toLocaleDateString('fr-FR', options));
+    };
+
+    // Format time
+    const formatTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+    };
+
+    formatDate();
+    formatTime();
+
+    // Update time every minute
+    const timeInterval = setInterval(formatTime, 60000);
+
+    return () => clearInterval(timeInterval);
   }, []);
 
-  // Exemple d'appel API pour récupérer les données utilisateur
   useEffect(() => {
-    // Remplacer par un appel réel à l'API
-    fetch('/me')
-      .then((res) => res.json())
-      .then((data) => setUser(data))
-      .catch((err) => console.error('Erreur récupération utilisateur:', err));
-  }, []);
+    const fetchDashboardData = async () => {
+      setIsLoading(true);
+      setError(null);
 
-   // Exemple d'appel API pour récupérer les conversations
-   useEffect(() => {
-    // Remplacer par un appel réel à l'API
-    fetch('/messages')
-      .then((res) => res.json())
-      .then((data) => setConversations(data))
-      .catch((err) => console.error('Erreur récupération conversations:', err));
+      try {
+        const token = localStorage.getItem('auth_token');
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        };
+
+        const [
+          userResponse,
+          logsResponse,
+          forumResponse,
+          messagesResponse,
+          interactionsResponse,
+          articlesResponse,
+          eventsResponse
+        ] = await Promise.all([
+          fetch(API_ENDPOINTS.USER_INFO, { headers }),
+          fetch(API_ENDPOINTS.SESSION_LOGS, { headers }),
+          fetch(API_ENDPOINTS.FORUM_ACTIVITY, { headers }),
+          fetch(API_ENDPOINTS.MESSAGES, { headers }),
+          fetch(API_ENDPOINTS.INTERACTIONS, { headers }),
+          fetch(API_ENDPOINTS.ARTICLES, { headers }),
+          fetch(API_ENDPOINTS.EVENTS, { headers })
+        ]);
+
+        if (!userResponse.ok) throw new Error('Failed to fetch user info');
+        if (!logsResponse.ok) throw new Error('Failed to fetch session logs');
+        if (!forumResponse.ok) throw new Error('Failed to fetch forum activity');
+        if (!messagesResponse.ok) throw new Error('Failed to fetch messages');
+        if (!interactionsResponse.ok) throw new Error('Failed to fetch interactions');
+        if (!articlesResponse.ok) throw new Error('Failed to fetch articles');
+        if (!eventsResponse.ok) throw new Error('Failed to fetch events');
+
+        const [
+          userData,
+          logsData,
+          forumData,
+          messagesData,
+          interactionsData,
+          articlesData,
+          eventsData
+        ] = await Promise.all([
+          userResponse.json(),
+          logsResponse.json(),
+          forumResponse.json(),
+          messagesResponse.json(),
+          interactionsResponse.json(),
+          articlesResponse.json(),
+          eventsResponse.json()
+        ]);
+
+        setUserInfo(userData);
+        setSessionLogs(logsData);
+        setForumActivityData(forumData);
+        setMessageData(messagesData);
+        setInteractions(interactionsData);
+        setArticles(articlesData);
+        setEvents(eventsData);
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+        setError('Impossible de charger les données. Veuillez réessayer plus tard.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
   }, []);
 
   return (
-    <div className="flex-1 p-10 bg-gray-50">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-2xl font-bold text-indigo-600">Tableau de bord</h2>
-        <div className="flex items-center space-x-3">
-          <span className="text-indigo-600 font-semibold">{user.prenom}</span>
-          <img
-            src={user.photo}
-            alt="Photo de profil"
-            className="w-10 h-10 rounded-full border-gray-600 object-cover"
+    <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Top Bar */}
+      <header className="bg-white shadow-sm">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center">
+            <div className="ml-4 md:ml-0">
+              <div className="text-sm text-gray-500 capitalize">{currentDate}</div>
+              <div className="text-xl font-semibold flex items-center">
+                <span>{currentTime}</span>
+                <Clock className="ml-2 text-fuchsia-600" size={20} />
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center">
+            <div className="hidden md:block mr-4 text-right">
+              <div className="text-sm text-gray-500">Bienvenue,</div>
+              <div className="font-semibold">{userInfo.name}</div>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-fuchsia-200 flex items-center justify-center overflow-hidden">
+              <img
+                src={userInfo.photo || '/api/placeholder/40/40'}
+                alt="Photo de profil"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Dashboard Content */}
+      <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Tableau de bord</h1>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <StatCard
+            title="Temps total"
+            value="12h 45min"
+            icon={<Clock className="text-purple-600" />}
+          />
+          <StatCard
+            title="Visites"
+            value="24"
+            icon={<Activity className="text-fuchsia-500" />}
+          />
+          <StatCard
+            title="Messages"
+            value="77"
+            icon={<MessageCircle className="text-violet-600" />}
+          />
+          <StatCard
+            title="Articles lus"
+            value="16"
+            icon={<BookOpen className="text-fuchsia-500" />}
           />
         </div>
-      </div>
-      <div className="text-right text-gray-600 text-sm mb-8">{currentTime}</div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Messages envoyés et reçus */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-indigo-600 mb-4">Messages</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={messageData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="sent" stroke="#6366F1" name="Envoyés" />
-              <Line type="monotone" dataKey="received" stroke="#F472B6" name="Reçus" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
 
-        {/* Signalements */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-indigo-600 mb-4">Signalements</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={messageData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="sent" stroke="#6366F1" name="Envoyés" />
-              <Line type="monotone" dataKey="received" stroke="#F472B6" name="Reçus" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        {/* Afficher message d'erreur s'il y en a un */}
+        {error && (
+          <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-6">
+            <p>{error}</p>
+          </div>
+        )}
 
+        {/* Afficher un loader pendant le chargement */}
+        {isLoading ? (
+          <div className="flex justify-center items-center h-40">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-fuchsia-600"></div>
+          </div>
+        ) : (
+          <>
+            
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              {/* Forum Activity Chart */}
+              <div className="bg-white rounded-lg shadow p-4">
+                <h2 className="text-lg font-semibold text-gray-700 mb-4">Activité sur le forum</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    data={forumActivityData}
+                    margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis dataKey="name" stroke="#666" />
+                    <YAxis stroke="#666" />
+                    <Tooltip />
+                    <Bar dataKey="posts" fill="#9c27b0" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
 
-        {/* Participation au forum */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-indigo-600 mb-4">Activité Forum</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <Pie
-                data={forumData}
-                cx="50%"
-                cy="50%"
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-                label
-              >
-                {forumData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              {/* Messages Pie Chart */}
+              <div className="bg-white rounded-lg shadow p-4">
+                <h2 className="text-lg font-semibold text-gray-700 mb-4">Statistiques de messages</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={messageData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {messageData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Legend />
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Events Section */}
+            <div className="bg-white rounded-lg shadow p-4 mb-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold text-gray-700">Événements à venir</h2>
+                <NavLink
+                  to="/calendar"
+                  className="text-fuchsia-600 hover:text-fuchsia-800 text-sm font-medium flex items-center"
+                >
+                  <span>Voir le calendrier</span>
+                  <CalendarDays size={16} className="ml-1" />
+                </NavLink>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {events.map(event => (
+                  <div
+                    key={event.id}
+                    className="border border-indigo-100 rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold text-fuchsia-700">{event.title}</h3>
+                      <div className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs">
+                        {event.date}
+                      </div>
+                    </div>
+                    <div className="flex items-center text-gray-500 text-sm mb-1">
+                      <Clock size={14} className="mr-1" />
+                      {event.time}
+                    </div>
+                    <div className="text-gray-500 text-sm">{event.location}</div>
+                  </div>
                 ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+              </div>
+            </div>
 
-        {/* Logs de connexion */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-indigo-600 mb-4">Logs de connexion</h3>
-          {/* À intégrer avec l'API /api/logs */}
-          <p className="text-gray-600">Dernière connexion: 28/04/2025 14:30</p>
-        </div>
+            {/* Lists Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Interactions List */}
+              <div className="bg-white rounded-lg shadow p-4">
+                <h2 className="text-lg font-semibold text-gray-700 mb-4">Interactions récentes</h2>
+                <ul className="space-y-3">
+                  {interactions.map(interaction => (
+                    <li
+                      key={interaction.id}
+                      className="flex items-center p-2 hover:bg-indigo-50 rounded-md"
+                    >
+                      <div className="w-10 h-10 rounded-full overflow-hidden">
+                        <img
+                          src={interaction.photo}
+                          alt={interaction.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <div className="font-medium">{interaction.name}</div>
+                        <div className="text-sm text-gray-500">Il y a {interaction.lastMessage}</div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-        {/* Articles postés */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-indigo-600 mb-4">Articles postés</h3>
-          {/* À intégrer avec l'API /api/articles */}
-          <p className="text-gray-600">Total: 15 articles</p>
-        </div>
+              {/* Articles List */}
+              <div className="bg-white rounded-lg shadow p-4">
+                <h2 className="text-lg font-semibold text-gray-700 mb-4">Articles récemment lus</h2>
+                <ul className="space-y-3">
+                  {articles.map(article => (
+                    <li key={article.id} className="p-2 hover:bg-indigo-50 rounded-md">
+                      <div className="font-medium text-fuchsia-700">{article.title}</div>
+                      <div className="text-sm text-gray-500">Lu le {article.readDate}</div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-        {/* Sujets forum */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-indigo-600 mb-4">Sujets forum</h3>
-          {/* À intégrer avec l'API /api/forum/topics */}
-          <p className="text-gray-600">Total: 25 sujets</p>
-        </div>
+              {/* Session Logs */}
+              <div className="bg-white rounded-lg shadow p-4">
+                <h2 className="text-lg font-semibold text-gray-700 mb-4">Historique de connexion</h2>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-2 text-sm font-medium text-gray-500">Date</th>
+                        <th className="text-left py-2 text-sm font-medium text-gray-500">Durée</th>
+                        <th className="text-left py-2 text-sm font-medium text-gray-500">Activité</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sessionLogs.map((log, index) => (
+                        <tr key={index} className="border-b border-gray-100">
+                          <td className="py-2 text-sm">{log.date}</td>
+                          <td className="py-2 text-sm">{log.duration}</td>
+                          <td className="py-2 text-sm">{log.activity}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </main>
+    </div>
+  );
+}
 
-          {/* Liste des conversations */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-indigo-600 mb-4">Conversations récentes</h3>
-          <ul className="text-gray-600">
-            {conversations.map((conv) => (
-              <li key={conv.id} className="flex justify-between py-2 border-b border-gray-200">
-                <span>{conv.name}</span>
-                <span className="text-sm text-gray-500">{conv.lastInteraction}</span>
-              </li>
-            ))}
-          </ul>
+// Stat Card Component
+function StatCard({ title, value, icon }) {
+  return (
+    <div className="bg-white rounded-lg shadow p-4">
+      <div className="flex items-center">
+        <div className="rounded-full w-12 h-12 flex items-center justify-center bg-indigo-50">
+          {icon}
         </div>
-
-        {/* Calendrier */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-indigo-600 mb-4">Calendrier</h3>
-          <Calendar
-            onChange={setCalendarDate}
-            value={calendarDate}
-            className="border-none text-indigo-600"
-          />
+        <div className="ml-4">
+          <h3 className="text-gray-500 text-sm">{title}</h3>
+          <p className="font-bold text-xl">{value}</p>
         </div>
       </div>
     </div>
   );
-};
-
-const App = () => {
-  const [activeSection, setActiveSection] = useState('home');
-
-  const renderSection = () => {
-    switch (activeSection) {
-      case 'home':
-        return <Dashboard />;
-      case 'about':
-        return <div className="flex-1 p-10 bg-gray-50"><h2 className="text-3xl font-bold text-indigo-600">À propos</h2></div>;
-      case 'blog':
-        return <div className="flex-1 p-10 bg-gray-50"><h2 className="text-3xl font-bold text-indigo-600">Blog</h2></div>;
-      case 'digithek':
-        return <div className="flex-1 p-10 bg-gray-50"><h2 className="text-3xl font-bold text-indigo-600">Digithek</h2></div>;
-      case 'courses':
-        return <div className="flex-1 p-10 bg-gray-50"><h2 className="text-3xl font-bold text-indigo-600">Cours</h2></div>;
-      case 'forum':
-        return <div className="flex-1 p-10 bg-gray-50"><h2 className="text-3xl font-bold text-indigo-600">Forum</h2></div>;
-      case 'contact':
-        return <div className="flex-1 p-10 bg-gray-50"><h2 className="text-3xl font-bold text-indigo-600">Contact</h2></div>;
-      case 'profile':
-        return <div className="flex-1 p-10 bg-gray-50"><h2 className="text-3xl font-bold text-indigo-600">Profil</h2></div>;
-      default:
-        return <Dashboard />;
-    }
-  };
-
-  return (
-    <div className="flex h-screen font-tienne">
-      <Sidebar setActiveSection={setActiveSection} />
-      {renderSection()}
-    </div>
-  );
-};
-
-export default App;
+}

@@ -20,7 +20,7 @@ function HeroAbout() {
         className="object-cover absolute inset-0 size-full h-150"
       />
       </div>
-      <div className=" h-130 absolute top-0 left-0 w-full  bg-black/40 " />
+      <div className=" h-[80vh] absolute top-0 left-0 w-full  bg-black/40 " />
      </div>
     
   );

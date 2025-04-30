@@ -65,6 +65,8 @@ class AuthController extends Controller
         ]);
 
         if (!Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $request->session()->regenerate(); // Créer une session
             return response()->json([
                 'message' => 'Identifiants invalides'
             ], 401);

@@ -37,6 +37,11 @@ class Thematic extends Model
 {
     return $this->belongsToMany(User::class, 'thematic_user'); // table pivot
 }
+    // App\Models\Thematic.php
+public function getRouteKeyName()
+{
+    return 'slug';
+}
 
     
 }

@@ -3,11 +3,11 @@ import * as React from "react";
 
 function RealisationsSection() {
   return (
-    <section className="flex flex-col rounded-3xl pl-20 pr-20 bg-indigo-50 pb-10">
-      <h2 className="self-start ml-5 text-4xl font-bold leading-none text-fuchsia-700 max-md:ml-2.5 max-md:text-4xl">
+    <section className="flex flex-col rounded-3xl pl-20 pr-20 bg-indigo-50 pb-8">
+      <h2 className="self-start  text-2xl font-bold leading-none text-fuchsia-700 max-md:ml-2.5 max-md:text-2xl">
         Realisations
       </h2>
-      <div className="mt-20 w-full max-md:mt-10 max-md:max-w-full">
+      <div className="mt-8 w-full max-md:mt-10 max-md:max-w-full">
         <div className="flex gap-5 max-md:flex-col">
           <div className="w-[49%] max-md:ml-0 max-md:w-full">
             <div className="w-full max-md:mt-9 max-md:max-w-full">
