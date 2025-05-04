@@ -151,7 +151,7 @@ function ObjectiveSection() {
         >
           <div className="relative mt-10 h-[480px] w-[200px]">
             <img
-              src="/src/assets/images/femme5.jpeg"
+              src="/src/assets/images/economie1.jpeg"
               alt="Illustration 1"
               className="object-cover rounded-xl shadow-[0_4px_6px_rgba(0,0,0,0.1)] size-full transition-transform duration-300 transform hover:scale-105"
             />

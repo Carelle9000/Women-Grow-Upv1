@@ -1,9 +1,11 @@
-// components/ActualitesSection.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import jif from "@/assets/images/fefie.webp";
 import mentorat from "@/assets/images/Mentorat.jpg";
 import ateliers from "@/assets/images/entrepreneuriat.jpg";
+import Article1 from '@/Components/Article1';
+import Article2 from '@/Components/Article2';
+import Article3 from '@/Components/Article3';
 
 const ActualitesSection = () => {
   const navigate = useNavigate();
@@ -16,8 +18,7 @@ const ActualitesSection = () => {
       image: "@/assets/images/fefie.webp",
       lien: "/actualites/journee-femme",
       taille: "grande",
-      lien:"https://blog.babasport.fr/team-building/10-ateliers-essentiels-de-formation-au-leadership",
-
+      lien: {Article1},
     },
     {
       titre: "Programme de Mentorat 2024",
@@ -26,7 +27,7 @@ const ActualitesSection = () => {
       image: "@/assets/images/Mentorat.jpg",
       lien: "/actualites/mentorat-2024",
       taille: "petite",
-      lien:"https://blog.babasport.fr/team-building/10-ateliers-essentiels-de-formation-au-leadership",
+      lien: {Article2},
     },
     {
       titre: "Ateliers de Formation",
@@ -35,7 +36,7 @@ const ActualitesSection = () => {
       image: "@/assets/images/entrepreneuriat.jpg",
       lien: "/actualites/ateliers-formation",
       taille: "petite",
-      lien:"https://blog.babasport.fr/team-building/10-ateliers-essentiels-de-formation-au-leadership",
+      lien: {Article3},
     },
   ];
 
@@ -63,7 +64,7 @@ const ActualitesSection = () => {
                 </h3>
                 <p className="text-gray-600 mt-2">{item.description}</p>
                 <button
-                  onClick={() => window.location.href = "https://cameroonceo.com/2025/03/10/la-journee-internationale-de-la-femme-au-cameroun-en-2025-le-potentiel-economique-des-femmes-camerounaises-sous-les-projecteurs/"}
+                  onClick={() => window.location.href = "/Article1"}
                   className="mt-4 px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-800 transition"
                 >
                   Découvrir
@@ -86,20 +87,21 @@ const ActualitesSection = () => {
                 src={index === 0 ? mentorat : ateliers}
                 alt={item.titre}
                 className="w-full h-56 object-cover rounded-t-xl"
+                onError={(e) => (e.target.src = "/placeholder.jpg")}
               />
               <div className="p-4">
                 <h3 className="text-xl font-semibold text-gray-900">
                   {item.titre}
                 </h3>
                 <p className="text-gray-600 mt-2">{item.description}</p>
-                <button
-                  onClick={() => window.location.href = "https://cameroonceo.com/2025/03/10/la-journee-internationale-de-la-femme-au-cameroun-en-2025-le-potentiel-economique-des-femmes-camerounaises-sous-les-projecteurs/"}
-                  className="mt-4 px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-800 transition"
-                  href={item.lien}
-
-                >
-                  Découvrir
-                </button>
+                <div className="mt-4 flex gap-4">
+                  <button
+                    onClick={() => window.location.href = index === 0 ? "/Article2" : "/Article3"}
+                    className="px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-800 transition"
+                  >
+                    Découvrir
+                  </button>
+                </div>
               </div>
             </div>
           ))}

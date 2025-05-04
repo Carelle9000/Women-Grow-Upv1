@@ -6,9 +6,10 @@ export default function AddArticleButton() {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    category: 'Waste Reduction',
+    category: '💼 Entrepreneuriat & Indépendance Financière',
     image: null,
     readTime: 5,
+    reportUrl: '', // Nouveau champ pour l'URL du rapport
   });
 
   const handleOpen = () => setIsOpen(true);
@@ -25,15 +26,14 @@ export default function AddArticleButton() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Ici, vous implémenteriez la logique pour envoyer les données à votre backend
-    console.log('Article soumis:', formData);
-    // Réinitialiser le formulaire et fermer le popup
+    confirm('Article soumis:', formData);
     setFormData({
       title: '',
       content: '',
-      category: 'Waste Reduction',
+      category: '💼 Entrepreneuriat & Indépendance Financière',
       image: null,
       readTime: 5,
+      reportUrl: '',
     });
     handleClose();
   };
@@ -42,7 +42,7 @@ export default function AddArticleButton() {
     <>
       <button
         onClick={handleOpen}
-        className=" sticky bottom-8 right-8 bg-fuchsia-500 hover:bg-fuschia-600 text-white font-medium py-2 px-4 rounded-lg flex items-center shadow-lg transition-all duration-300"
+        className="sticky bottom-8 right-8 bg-fuchsia-500 hover:bg-fuchsia-600 text-white font-medium py-2 px-4 rounded-lg flex items-center shadow-lg transition-all duration-300"
       >
         <Plus size={20} className="mr-2" />
         Ajouter un article
@@ -61,7 +61,7 @@ export default function AddArticleButton() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-3">
+            <form onSubmit={handleSubmit} className="p-6">
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
                   Titre
@@ -88,12 +88,12 @@ export default function AddArticleButton() {
                   onChange={handleChange}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 >
-                  <option value="Waste Reduction">Waste Reduction</option>
-                  <option value="Recycling">Recycling</option>
-                  <option value="Composting">Composting</option>
-                  <option value="Environmental Impact">Environmental Impact</option>
-                  <option value="Community Action">Community Action</option>
-                  <option value="Technology">Technology</option>
+                  <option value="💼 Entrepreneuriat & Indépendance Financière">💼 Entrepreneuriat & Indépendance Financière</option>
+                  <option value="🌟 Empowerment & Leadership">🌟 Empowerment et Leadership</option>
+                  <option value="🎓 Éducation & Développement Personnel">🎓 Éducation & Développement Personnel</option>
+                  <option value="👩🏾‍🤝‍👩🏽 Rôle Modèle & Témoignages">👩🏾‍🤝‍👩🏽 Rôle Modèle & Témoignagest</option>
+                  <option value="🧘🏽‍♀️ Bien-être & Santé Mentale">🧘🏽‍♀️ Bien-être & Santé Mentale</option>
+                  <option value="🌍 Société, Culture & Engagement">🌍 Société, Culture & Engagement</option>
                 </select>
               </div>
               
@@ -122,6 +122,21 @@ export default function AddArticleButton() {
                   name="image"
                   accept="image/*"
                   onChange={handleChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="reportUrl">
+                  URL du Rapport (optionnel)
+                </label>
+                <input
+                  type="url"
+                  id="reportUrl"
+                  name="reportUrl"
+                  value={formData.reportUrl}
+                  onChange={handleChange}
+                  placeholder="Exemple : https://powerdrill.ai/report/123"
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>

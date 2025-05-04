@@ -76,8 +76,12 @@ const ForumSection = () => {
 
   const handleCreateThematic = async (e) => {
     e.preventDefault();
-    if (!token) {
+    // Fallback to localStorage if token from useUser is undefined
+    const authToken = token || localStorage.getItem('token');
+    console.log('Attempting to create thematic with token:', authToken); // Debug token
+    if (!authToken || typeof authToken !== 'string' || authToken.trim() === '') {
       setError('Vous devez être connecté pour créer un sujet');
+      console.log('Token invalid or missing:', authToken); // Debug token issue
       return;
     }
     if (!formData.title.trim() || formData.title.length > 255) {
@@ -89,22 +93,28 @@ const ForumSection = () => {
       return;
     }
     try {
+      console.log('Sending API request with formData:', formData); // Debug request
       const response = await api.post('/forum', formData, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${authToken}` },
       });
+      console.log('API response:', response.data); // Debug response
       setThematics([response.data.data, ...thematics]);
       setFormData({ title: '', content: '' });
       setSuccess('Sujet créé avec succès');
       setError('');
       setIsPopupOpen(false);
     } catch (err) {
+      console.error('Create thematic error:', err.response?.data, err.response?.status); // Debug error
       if (err.response?.status === 422) {
         const errors = err.response.data.errors;
         setError(Object.values(errors).flat().join(', '));
+      } else if (err.response?.status === 401) {
+        setError('Session invalide. Veuillez vous reconnecter.');
+      } else if (err.response?.status === 403) {
+        setError('Vous n’êtes pas autorisé à créer un sujet.');
       } else {
-        setError('Erreur lors de la création du sujet');
+        setError(err.response?.data?.message || 'Erreur lors de la création du sujet');
       }
-      console.error(err);
     }
   };
 
@@ -195,7 +205,7 @@ const ForumSection = () => {
   const handleCloseThematic = async (thematicSlug) => {
     try {
       await api.post(
-        `/forum/${thematicSlug}/close`,
+        `/forumრંઍ(forum/${thematicSlug}/close`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -279,22 +289,18 @@ const ForumSection = () => {
             />
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
           </div>
-          {token ? (
-            <motion.button
-              className="flex items-center gap-2 bg-fuchsia-600 text-white pl-5 px-12 py-2 rounded-lg hover:bg-fuchsia-800 transition shadow-md text-sm font-semibold"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                console.log('Opening new thematic popup'); // Debug
-                setIsPopupOpen(true);
-              }}
-            >
-              <Plus size={18} />
-              Nouveau sujet
-            </motion.button>
-          ) : (
-            <p className="text-gray-600">Connectez-vous pour créer un sujet</p>
-          )}
+          <motion.button
+            className="flex items-center gap-2 bg-fuchsia-600 text-white pl-5 px-12 py-2 rounded-lg hover:bg-fuchsia-800 transition shadow-md text-sm font-semibold"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => {
+              console.log('Opening new thematic popup'); // Debug
+              setIsPopupOpen(true);
+            }}
+          >
+            <Plus size={18} />
+            Nouveau sujet
+          </motion.button>
         </div>
       </div>
 

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import apiEND from '/src/API/axios';
@@ -37,8 +36,9 @@ export default function MembersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [newMessage, setNewMessage] = useState('');
 
-  // Fetch users and active sessions from API
+
   useEffect(() => {
     const fetchUsersAndSessions = async () => {
       try {
@@ -50,7 +50,15 @@ export default function MembersPage() {
           },
         });
         console.log('Users API Response:', usersResponse.data);
-        const usersData = Array.isArray(usersResponse.data) ? usersResponse.data : [];
+
+        const usersData = Array.isArray(usersResponse.data)
+          ? usersResponse.data
+          : usersResponse.data.data || [];
+
+        // Log user IDs and types for debugging
+        usersData.forEach(user => {
+          console.log(`User ID: ${user.id}, Type: ${typeof user.id}, Name: ${user.prenom} ${user.nom}`);
+        });
 
         let activeUserIds = [];
         try {
@@ -67,7 +75,7 @@ export default function MembersPage() {
         }
 
         const validatedMembers = usersData.map(member => ({
-          id: member.id,
+          id: member.id, // Keep the ID as is (string or number)
           name: `${member.prenom} ${member.nom}`,
           email: member.email,
           telephone: member.telephone,
@@ -96,7 +104,8 @@ export default function MembersPage() {
 
   // Handle opening the compose modal
   const handleOpenComposeModal = member => {
-    if (!member || !member.id || isNaN(member.id)) {
+    console.log('Opening compose modal for member:', member);
+    if (!member || !member.id) { // Removed isNaN check
       console.error('Invalid recipient:', member);
       setError('Utilisateur invalide.');
       return;
@@ -110,19 +119,31 @@ export default function MembersPage() {
 
   const handleSendMessage = async e => {
     e.preventDefault();
+
     if (!composeMessage.trim() || !recipient || !recipient.id) {
       setError('Destinataire ou message invalide.');
       return;
     }
 
-    const recipientId = parseInt(recipient.id, 10);
-    console.log('Sending message:', { recipientId, content: composeMessage });
+    // const recipientId = parseInt(recipient.id, 10); // Removed parseInt
+    // if (isNaN(recipientId)) { // Removed isNaN check
+    //   setError('ID du destinataire invalide. Veuillez sélectionner un destinataire valide.');
+    //   return;
+    // }
+
+    // *** ADD THESE LINES ***
+    console.log('Recipient Object:', recipient); // Log the entire recipient object
+    console.log('recipient.id (before sending):', recipient.id); // Log the raw recipient.id
+    console.log('typeof recipient.id:', typeof recipient.id); // Log the data type of recipient.id
+    // *** END ADDED LINES ***
+
+    console.log('Sending message:', { recipient_id: recipient.id, content: composeMessage }); // Use recipient.id directly
 
     try {
       const response = await apiEND.post(
         '/messages',
         {
-          recipientId,
+          recipient_id: recipient.id, // Send recipient.id directly (as a string)
           content: composeMessage,
         },
         {
@@ -132,25 +153,29 @@ export default function MembersPage() {
           },
         }
       );
+
       setSuccessMessage('Message envoyé avec succès !');
       setComposeMessage('');
       setTimeout(() => {
         setShowComposeModal(false);
         setSuccessMessage(null);
       }, 1500);
+
     } catch (error) {
       console.error('Error sending message:', error);
       console.log('Full error response:', error.response?.data);
+
       if (error.response && error.response.status === 422) {
         const validationErrors = error.response.data.errors;
         console.error('Validation errors:', validationErrors);
-        setError(
-          validationErrors
-            ? Object.values(validationErrors).flat().join(' ')
-            : 'Erreur de validation des données.'
-        );
+
+        if (validationErrors && Object.keys(validationErrors).length > 0) {
+          setError(Object.values(validationErrors).flat().join(' '));
+        } else {
+          setError('Erreur de validation des données.');
+        }
       } else {
-        setError('Impossible d’envoyer le message.');
+        setError('Impossible d\'envoyer le message.');
       }
     }
   };
@@ -474,7 +499,7 @@ export default function MembersPage() {
 
         {showComposeModal && recipient && (
           <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

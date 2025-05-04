@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { Home, User, Users, Calendar, LogOut, Menu, X } from 'lucide-react';
+import { Home, User, Users, Calendar, LogOut, Menu, X, FileText } from 'lucide-react';
 
 function NavItem({ icon, text, active }) {
   return (
@@ -58,6 +58,15 @@ function SidebarContent() {
           <NavItem
             icon={<Calendar size={20} />}
             text="Calendrier"
+            active={isActive}
+          />
+        )}
+      </NavLink>
+      <NavLink to="/reports">
+        {({ isActive }) => (
+          <NavItem
+            icon={<FileText size={20} />}
+            text="Rapports"
             active={isActive}
           />
         )}

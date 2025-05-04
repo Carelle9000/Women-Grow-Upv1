@@ -1,25 +1,26 @@
 import React from 'react';
 
+
 const members = [
   {
     name: "Ms. Yvonne B. Ralston",
     title: "Directrice générale de l'Association des Femmes Leaders",
-    image: "https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/your_image_url_1", // Replace with your image URL
+    image: "/src/assets/images/1.jpeg", // Replace with your image URL
   },
   {
     name: "Ms. Kristi Muir",
     title: "Directrice exécutive de Women Transforming Cities",
-    image: "https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/your_image_url_2", // Replace with your image URL
+    image: "/src/assets/images/2.jpeg", // Replace with your image URL
   },
   {
     name: "Ms. Sarah H. Karam",
     title: "Directrice de l'Université de la Femme",
-    image: "", // Replace with your image URL
+    image: "/src/assets/images/4.jpg", // Replace with your image URL
   },
   {
     name: "Ms. Sarah Elizabeth",
     title: "Directrice des Programmes de Women Empowerment",
-    image: "https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/your_image_url_4", // Replace with your image URL
+    image: "/src/assets/images/3.jpg", // Replace with your image URL
   },
 ];
 

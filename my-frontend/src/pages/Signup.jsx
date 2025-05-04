@@ -1,21 +1,26 @@
 import React, { useState } from "react";
-//import axios from "axios";
-import apiEND from "../API/axios"; // Assurez-vous que le chemin est correct
-import { HiUser, HiMail, HiLockClosed, HiLocationMarker, HiPhone, HiPhotograph, HiGlobeAlt, HiHome } from "react-icons/hi";
+import { useNavigate, Link } from "react-router-dom";
+import apiEND from "../API/axios";
+import { HiUser, HiMail, HiLockClosed, HiLocationMarker, HiPhone, HiPhotograph, HiGlobeAlt, HiHome, HiChevronLeft } from "react-icons/hi";
 import womengrowup from '@/assets/images/womengrowup.png';
 import solidarite from "@/assets/images/solidarite.jpg";
 
 const Input = ({ icon: Icon, error, ...props }) => (
-  <div className={`flex items-center bg-white rounded-lg shadow-sm border ${error ? 'border-red-500' : 'border-gray-200'} mb-1 px-3 py-2 focus-within:ring-2 focus-within:ring-purple-300 transition`}>
-    {Icon && <Icon className={`${error ? 'text-red-500' : 'text-purple-400'} mr-2 text-xl`} />}
+  <div className={`relative flex items-center mb-3`}>
+    <div className="absolute left-3 text-gray-400">
+      {Icon && <Icon className={`${error ? 'text-red-500' : 'text-gray-400'} text-lg`} />}
+    </div>
     <input
-      className="w-full bg-transparent outline-none text-gray-700 placeholder-gray-400"
+      className={`w-full py-3 pl-10 pr-3 rounded-full bg-gray-100 border ${
+        error ? "border-red-500" : "border-gray-200"
+      } text-sm focus:outline-none focus:ring-2 focus:ring-purple-400`}
       {...props}
     />
   </div>
 );
 
-const Signup =()=> {
+const Signup = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     prenom: "", nom: "", age: "", adresse: "", telephone: "",
     email: "", ville: "", password: "", password_confirmation: "",
@@ -56,24 +61,20 @@ const Signup =()=> {
       if (value !== null && value !== undefined) {
         formData.append(key, value);
       }
-   });
+    });
     
-    // Ligne de débogage ajoutée :
     console.log("Données envoyées:", Object.fromEntries(formData.entries()));
-    //console.log("photo:", form.photo);
-
-  
 
     try {
       const response = await apiEND.post('/register', formData);
       console.log("succes", response.data);
-      setSuccess("Connexion réussie ! Redirection...");
+      setSuccess("Inscription réussie ! Redirection...");
 
       if (response.data.success) {
         setSuccess("Inscription réussie ! Redirection...");
         // Redirect after 2 seconds
         setTimeout(() => {
-          navigate("/");
+          navigate("/Login");
         }, 2000);
       }
     } catch (error) {
@@ -94,62 +95,84 @@ const Signup =()=> {
   };
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-gradient-to-tr from-purple-100 via-white to-white">
-      {/* Colonne gauche */}
-      <div className="hidden md:flex md:w-1/2 flex-col justify-center items-center bg-gradient-to-br from-purple-600 to-purple-400 p-4">
-        <img src={womengrowup} alt="Women Grow Up" className="h-40 mb-8" />
-        <h1 className="text-white text-3xl lg:text-4xl font-bold mb-8 text-center leading-snug drop-shadow-lg">
-          Bienvenue dans<br />notre Communauté
-        </h1>
-        <img src={solidarite} alt="Solidarité" className="rounded-2xl shadow-xl w-64 h-64 lg:w-96 lg:h-96 object-cover" />
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600">
+      {/* Éléments décoratifs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute left-1/4 top-1/3 w-32 h-64 bg-pink-400/30 rounded-full rotate-12 blur-md"></div>
+        <div className="absolute right-1/4 bottom-1/3 w-64 h-32 bg-orange-400/30 rounded-full -rotate-12 blur-md"></div>
+        <div className="absolute left-1/3 bottom-1/4 w-40 h-40 bg-indigo-400/30 rounded-full rotate-45 blur-md"></div>
       </div>
       
-      {/* Colonne droite */}
-      <div className="w-full md:w-1/2 h-dvh flex flex-col justify-center items-center bg-gray-50 overflow-y-auto py-8">
-        <form className="w-full max-w-md bg-gray-50 rounded-2xl px-5" onSubmit={handleSubmit}>
-          <h2 className="text-2xl text-gray-800 mb-6 text-center font-tienne">Créer votre compte</h2>
-
+      <div className="flex w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden relative z-10">
+        {/* Partie gauche avec image et texte de bienvenue */}
+        <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 p-10 text-white flex-col justify-center items-center relative overflow-hidden">
+          <img src={womengrowup} alt="Women Grow Up" className="h-32 mb-6" />
+          <h1 className="text-2xl lg:text-3xl font-bold mb-6 text-center leading-snug drop-shadow-lg">
+            Bienvenue dans<br />notre Communauté
+          </h1>
+          <div className="rounded-2xl shadow-xl overflow-hidden w-48 h-48 lg:w-64 lg:h-64">
+            <img src={solidarite} alt="Solidarité" className="w-full h-full object-cover" />
+          </div>
+          
+          {/* Formes décoratives */}
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-orange-400/30 rounded-full rotate-12"></div>
+          <div className="absolute top-10 right-10 w-20 h-20 bg-pink-400/30 rounded-full -rotate-12"></div>
+          <div className="absolute bottom-20 right-5 w-28 h-10 bg-indigo-300/40 rounded-full rotate-45"></div>
+        </div>
+        
+        {/* Partie droite avec formulaire */}
+        <div className="w-full md:w-1/2 bg-white p-8 flex flex-col justify-start overflow-y-auto max-h-[600px]">
+          <div className="flex justify-between items-center mb-6">
+            <Link to="/Login">
+              <button type="button" className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-purple-500 focus:outline-none">
+                <HiChevronLeft size={20} />
+              </button>
+            </Link>
+            <h2 className="text-xl font-semibold text-center text-gray-700">Créer votre compte</h2>
+            <div className="w-8"></div> {/* Pour équilibrer le header */}
+          </div>
+          
           {/* General error message */}
           {errors.general && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+            <div className="mb-4 p-3 bg-red-100 text-red-700 text-sm rounded-lg">
               {errors.general[0]}
             </div>
           )}
 
           {/* Success message */}
           {success && (
-            <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">
+            <div className="mb-4 p-3 bg-green-100 text-green-700 text-sm rounded-lg">
               {success}
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Input 
-                icon={HiUser} 
-                name="prenom" 
-                placeholder="Prénom" 
-                value={form.prenom} 
-                onChange={handleChange} 
-                error={errors.prenom}
-              />
-              {errors.prenom && <p className="text-red-500 text-sm mt-1">{errors.prenom[0]}</p>}
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+              <div>
+                <Input 
+                  icon={HiUser} 
+                  name="prenom" 
+                  placeholder="Prénom" 
+                  value={form.prenom} 
+                  onChange={handleChange} 
+                  error={errors.prenom}
+                />
+                {errors.prenom && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.prenom[0]}</p>}
+              </div>
+
+              <div>
+                <Input 
+                  icon={HiUser} 
+                  name="nom" 
+                  placeholder="Nom" 
+                  value={form.nom} 
+                  onChange={handleChange} 
+                  error={errors.nom}
+                />
+                {errors.nom && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.nom[0]}</p>}
+              </div>
             </div>
 
-            <div>
-              <Input 
-                icon={HiUser} 
-                name="nom" 
-                placeholder="Nom" 
-                value={form.nom} 
-                onChange={handleChange} 
-                error={errors.nom}
-              />
-              {errors.nom && <p className="text-red-500 text-sm mt-1">{errors.nom[0]}</p>}
-            </div>
-          </div>
-
-          <div className="mt-2">
             <Input 
               icon={HiHome} 
               name="age" 
@@ -159,10 +182,8 @@ const Signup =()=> {
               onChange={handleChange} 
               error={errors.age}
             />
-            {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age[0]}</p>}
-          </div>
+            {errors.age && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.age[0]}</p>}
 
-          <div className="mt-2">
             <Input 
               icon={HiLocationMarker} 
               name="adresse" 
@@ -171,10 +192,8 @@ const Signup =()=> {
               onChange={handleChange} 
               error={errors.adresse}
             />
-            {errors.adresse && <p className="text-red-500 text-sm mt-1">{errors.adresse[0]}</p>}
-          </div>
+            {errors.adresse && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.adresse[0]}</p>}
 
-          <div className="mt-2">
             <Input 
               icon={HiPhone} 
               name="telephone" 
@@ -183,10 +202,8 @@ const Signup =()=> {
               onChange={handleChange} 
               error={errors.telephone}
             />
-            {errors.telephone && <p className="text-red-500 text-sm mt-1">{errors.telephone[0]}</p>}
-          </div>
+            {errors.telephone && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.telephone[0]}</p>}
 
-          <div className="mt-2">
             <Input 
               icon={HiMail} 
               name="email" 
@@ -196,36 +213,34 @@ const Signup =()=> {
               onChange={handleChange} 
               error={errors.email}
             />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>}
-          </div>
+            {errors.email && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.email[0]}</p>}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-            <div>
-              <Input 
-                icon={HiGlobeAlt} 
-                name="ville" 
-                placeholder="Ville" 
-                value={form.ville} 
-                onChange={handleChange} 
-                error={errors.ville}
-              />
-              {errors.ville && <p className="text-red-500 text-sm mt-1">{errors.ville[0]}</p>}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+              <div>
+                <Input 
+                  icon={HiGlobeAlt} 
+                  name="ville" 
+                  placeholder="Ville" 
+                  value={form.ville} 
+                  onChange={handleChange} 
+                  error={errors.ville}
+                />
+                {errors.ville && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.ville[0]}</p>}
+              </div>
+
+              <div>
+                <Input 
+                  icon={HiGlobeAlt} 
+                  name="pays" 
+                  placeholder="Pays" 
+                  value={form.pays} 
+                  onChange={handleChange} 
+                  error={errors.pays}
+                />
+                {errors.pays && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.pays[0]}</p>}
+              </div>
             </div>
 
-            <div>
-              <Input 
-                icon={HiGlobeAlt} 
-                name="pays" 
-                placeholder="Pays" 
-                value={form.pays} 
-                onChange={handleChange} 
-                error={errors.pays}
-              />
-              {errors.pays && <p className="text-red-500 text-sm mt-1">{errors.pays[0]}</p>}
-            </div>
-          </div>
-
-          <div className="mt-2">
             <Input 
               icon={HiLockClosed} 
               name="password" 
@@ -235,10 +250,8 @@ const Signup =()=> {
               onChange={handleChange} 
               error={errors.password}
             />
-            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>}
-          </div>
+            {errors.password && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.password[0]}</p>}
 
-          <div className="mt-2">
             <Input 
               icon={HiLockClosed} 
               name="password_confirmation" 
@@ -248,37 +261,43 @@ const Signup =()=> {
               onChange={handleChange} 
               error={errors.password_confirmation}
             />
-            {errors.password_confirmation && <p className="text-red-500 text-sm mt-1">{errors.password_confirmation[0]}</p>}
-          </div>
+            {errors.password_confirmation && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.password_confirmation[0]}</p>}
 
-          <div className="mt-2">
-            <div className={`flex items-center bg-white rounded-lg shadow-sm border ${errors.photo ? 'border-red-500' : 'border-gray-200'} mb-1 px-3 py-2`}>
-              <HiPhotograph className={`${errors.photo ? 'text-red-500' : 'text-purple-400'} mr-2 text-xl`} />
+            <div className="relative flex items-center mb-3">
+              <div className="absolute left-3 text-gray-400">
+                <HiPhotograph className={`${errors.photo ? 'text-red-500' : 'text-gray-400'} text-lg`} />
+              </div>
               <input 
                 type="file" 
                 name="photo" 
                 accept="image/*" 
-                className="w-full text-gray-400" 
+                className="w-full py-3 pl-10 pr-3 rounded-full bg-gray-100 border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" 
                 onChange={handleChange} 
               />
             </div>
-            {errors.photo && <p className="text-red-500 text-sm mt-1">{errors.photo[0]}</p>}
-          </div>
+            {errors.photo && <p className="text-red-500 text-xs mt-1 ml-3 mb-2">{errors.photo[0]}</p>}
 
-          <button 
-            type="submit" 
-            disabled={isSubmitting}
-            className={`w-full py-3 mt-6 rounded-lg bg-purple-500 hover:bg-purple-800 text-white font-bold text-lg transition ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
-          >
-            {isSubmitting ? 'Inscription en cours...' : 'S\'inscrire'}
-          </button>
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className={`w-full py-3 mt-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium text-sm 
+                shadow hover:shadow-lg transition-all duration-300 ${
+                isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+              {isSubmitting ? 'Inscription en cours...' : 'S\'inscrire'}
+            </button>
 
-          <div className="mt-6 text-center text-gray-500">
-            Déjà un compte ? <a href="/Login" className="text-purple-600 hover:underline font-semibold">connectez-vous</a>
-          </div>
-        </form>
+            <div className="mt-6 text-center text-gray-500 text-sm">
+              Déjà un compte ? <Link to="/Login" className="text-purple-500 hover:underline">Se connecter</Link>
+            </div>
+          </form>
+        </div>
       </div>
+      
+      
     </div>
   );
-}
-export default Signup ;
+};
+
+export default Signup;

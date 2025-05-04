@@ -112,12 +112,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/conversations/{conversation}', [ConversationController::class, 'destroy'])->name('conversations.destroy');
 });
 
-Route::middleware('auth:sanctum')->get('/messages', [ConversationController::class, 'index']);
-
 // routes pour les messsages entre les utilisateurs
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/messages', [ConversationController::class, 'index']);
 Route::get('/members', [MemberController::class, 'index']);
-Route::middleware('auth:sanctum')->post('/messages', [MessageUserController::class, 'storeChat']);
+Route::post('/messages', [MessageUserController::class, 'storeChat']);
 Route::get('/messages/{recipientId}', [MessageUserController::class, 'show']);
+Route::post('/chat-messages', [MessageController::class, 'storeChatMessage']);
+});
 
 //routes pour les sessions
 Route::get('/sessions', [SessionController::class, 'index'])->middleware('auth:sanctum');

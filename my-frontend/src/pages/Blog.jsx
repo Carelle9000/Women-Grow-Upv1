@@ -31,32 +31,37 @@ const Blog = () => {
       <Header />
       
       <div className="z-10">
-        {/* Hero Section */}
-        <header className="flex relative flex-col text-white h-150 max-md:max-w-full">
-          <img
-            src="/src/assets/images/economie1.jpeg"
-            alt="Blog hero background"
-            className="object-cover absolute inset-0 size-full"
-          />
-          <div className="flex relative flex-col items-start px-16 pt-96 pb-44 w-full bg-black/50 h-full max-md:px-5 max-md:py-24 max-md:max-w-full">
-            <div className="flex flex-wrap gap-5 justify-between items-start mb-0 w-full max-w-[1276px] max-md:mb-2.5 max-md:max-w-full text-xl">
-              <div className="flex flex-col gap-2">
-                <h1 className="max-md:max-w-full text-2xl">
-                  Découvrez notre tout nouveau blog !
-                </h1> <br />
-                <p className="">
-                  Nous sommes ravis de vous présenter notre espace dédié aux idées, conseils et actualités. <br />
-                  Retrouvez ici des articles inspirants, des analyses approfondies et des astuces pratiques. <br />
-                </p>
-              </div>
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/60d81097ee258945efec484f51889eecbbbbfbbf?placeholderIfAbsent=true"
-                alt="Blog logo"
-                className="object-contain shrink-0 aspect-square w-[60px]"
-              />
-            </div>
+        {/* HeroSection */}
+    <header className="relative w-full h-screen max-h-[500px] text-white overflow-hidden">
+      {/* Image d'arrière-plan avec overlay */}
+      <div className="absolute inset-0">
+        <img
+          src="/src/assets/images/balance-transfer.jpeg"
+          alt="Blog hero background"
+          className="object-cover w-full h-full"
+        />
+        {/* Overlay noir semi-transparent */}
+        <div className="absolute inset-0 bg-black/60"></div>
+      </div>
+      
+      {/* Contenu héro centré */}
+      <div className="relative flex flex-col justify-center h-full px-6 md:px-12 lg:px-16 py-10">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+            Découvrez notre tout nouveau blog !
+          </h1>
+          
+          <div className="space-y-2 text-base md:text-lg lg:text-xl">
+            <p>
+              Nous sommes ravis de vous présenter notre espace dédié aux idées, conseils et actualités.
+            </p>
+            <p>
+              Retrouvez ici des articles inspirants, des analyses approfondies et des astuces pratiques.
+            </p>
           </div>
-        </header>
+        </div>
+      </div>
+    </header>
       </div>
       
       <Articles />

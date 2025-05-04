@@ -233,14 +233,7 @@ function RecentDiscussions() {
                     Lire la suite
                   </button>
                   
-                  <div className="flex items-center gap-6 text-gray-500 text-sm">
-                    <div className="flex items-center gap-1">
-                      <MessageCircle size={16} /> {discussion.comments}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Eye size={16} /> {discussion.views}
-                    </div>
-                  </div>
+                  
                 </div>
 
                 {/* Category */}

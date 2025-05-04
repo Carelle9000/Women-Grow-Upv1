@@ -1,115 +1,125 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, ChevronRight } from 'lucide-react';
-import AddArticleButton from './AddArticleButton'; // Assurez-vous que le chemin est correct
+import { MessageCircle, Eye } from 'lucide-react';
+
 export default function Articles() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Sample article data
   const articles = [
     {
       id: 1,
-      title: '10 Ways to Reduce Your Household Waste',
-      description: 'Simple yet effective strategies to minimize waste generation in your home and contribute to a cleaner environment.',
+      title: 'Empowerment et Leadership',
+      description: 'Comment renforcer la présence des femmes dans les rôles de direction ?',
       author: 'Emma Johnson',
       date: 'May 15, 2025',
       readTime: '5 min read',
-      category: 'Waste Reduction',
-      image: '/src/assets/images/economie1.jpeg',
+      category: 'Leadership',
+      image: '/src/assets/images/empowerment.jpg',
+      link: '/ArticleB1',
     },
     {
       id: 2,
-      title: 'The Impact of Single-Use Plastics on Marine Life',
-      description: 'An in-depth look at how disposable plastics are affecting our oceans and marine ecosystems.',
+      title: 'Éducation et Développement Personnel',
+      description: "L'éducation des femmes en Afrique est essentielle pour réduire les inégalités de genre.",
       author: 'Michael Rivera',
       date: 'May 12, 2025',
       readTime: '10 min read',
-      category: 'Environmental Impact',
-      image: '/src/assets/images/economie1.jpeg',
+      category: 'Education',
+      image: '/src/assets/images/devopp.jpg',
+      link: '/ArticleB2',
     },
     {
       id: 3,
-      title: 'Composting 101: A Beginner\'s Guide',
-      description: 'Learn how to start your own composting system at home and turn waste into valuable garden resource.',
+      title: 'Entrepreneuriat et Indépendance Financière',
+      description: 'Apprendre à être indépendante dans le milieu entrepreneurial.',
       author: 'Sarah Wilson',
       date: 'May 10, 2025',
       readTime: '8 min read',
-      category: 'Composting',
-      image: '/src/assets/images/social.jpeg',
+      category: 'Entrepreunariat',
+      image: '/src/assets/images/entrepreunariat2.webp',
+      link: '/ArticleB3',
     },
     {
       id: 4,
-      title: 'Innovative Recycling Technologies',
-      description: 'Explore cutting-edge technologies transforming how we process recyclable materials.',
+      title: 'Bien-être et Santé mentale',
+      description: 'Explorez les technologies de pointe qui transforment notre rapport à la santé mentale.',
       author: 'David Chen',
       date: 'May 8, 2025',
       readTime: '7 min read',
-      category: 'Recycling',
-      image: '/src/assets/images/solidarite(45).jpg',
+      category: 'Sante mentale',
+      image: '/src/assets/images/Bienetre.jpg',
+      link: '/ArticleB4',
     },
     {
       id: 5,
-      title: 'Community-Led Zero Waste Initiatives',
-      description: 'Success stories from communities around the world implementing zero waste programs.',
+      title: 'Droits Humains',
+      description: "Comprendre l'impact et l'importance de la connaissance des droits des femmes.",
       author: 'Lisa Thompson',
       date: 'May 5, 2025',
       readTime: '6 min read',
-      category: 'Community Action',
-      image: '/src/assets/images/solidarite(43).jpg',
+      category: 'Droits Juridiques',
+      image: '/src/assets/images/DroitsHumains.jpg',
+      link: '/ArticleB5',
     },
     {
       id: 6,
-      title: 'Smart Tech for Sustainable Living',
-      description: 'How IoT and smart home devices can help you reduce your environmental footprint.',
+      title: 'Société, Culture et Engagement Social',
+      description: 'Comment s’impliquer et émerger dans une société paternaliste et institutionnelle ?.',
       author: 'James Wilson',
       date: 'May 3, 2025',
       readTime: '9 min read',
-      category: 'Technology',
-      image: '/src/assets/images/solidarite(41).jpg',
+      category: 'Sociologie',
+      image: '/src/assets/images/Engagement.jpg',
+      link: '/ArticleB6',
     }
   ];
 
   const categories = [
-    'All', 
-    'Waste Reduction', 
-    'Recycling', 
-    'Composting', 
-    'Environmental Impact', 
-    'Community Action', 
-    'Technology'
+    'All',
+    'Leadership',
+    'Education',
+    'Entrepreunariat',
+    'Sante mentale',
+    'Droits Juridiques',
+    'Sociologie',
   ];
 
-  // Filter articles based on search query and active filter
+  // Fonction pour ajouter des données factices pour `views` et `comments`
+  const enrichArticlesWithStats = (articles) => {
+    return articles.map((article) => ({
+      ...article,
+      views: Math.floor(Math.random() * 500 + 100), // entre 100 et 600 vues
+      comments: Math.floor(Math.random() * 20 + 1), // entre 1 et 20 commentaires
+    }));
+  };
+
   useEffect(() => {
     setIsLoading(true);
-    
-    // Simulate network request delay
     const timer = setTimeout(() => {
-      const results = articles.filter(article => {
-        const matchesQuery = article.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            article.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const enrichedArticles = enrichArticlesWithStats(articles);
+      const results = enrichedArticles.filter((article) => {
+        const matchesQuery = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                             article.description.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesFilter = activeFilter === 'All' || article.category === activeFilter;
-        
         return matchesQuery && matchesFilter;
       });
-      
       setFilteredArticles(results);
       setIsLoading(false);
     }, 300);
-    
+
     return () => clearTimeout(timer);
   }, [searchQuery, activeFilter]);
 
-  // Handle filter selection
   const handleFilterClick = (filter) => {
     setActiveFilter(filter);
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 m-6">
-      {/* Search and Filter Section */}
       <div className="mb-8">
         <div className="relative mb-6">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
@@ -118,12 +128,12 @@ export default function Articles() {
           <input
             type="text"
             className="w-1/3 p-3 pl-10 border bg-white border-gray-300 rounded-lg focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 outline-none transition"
-            placeholder="Search articles..."
+            placeholder="Rechercher un article..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        
+
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
             <button
@@ -139,24 +149,19 @@ export default function Articles() {
             </button>
           ))}
         </div>
-              <AddArticleButton />
-        
       </div>
 
-      {/* Featured Articles Header */}
-      <h2 className="text-2xl font-bold text-fuchsia-500 mb-6">Featured Articles</h2>
+      <h2 className="text-2xl font-bold text-fuchsia-500 mb-6">Articles Vedettes</h2>
 
-      {/* Loading State */}
       {isLoading && (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-500"></div>
         </div>
       )}
 
-      {/* No Results State */}
       {!isLoading && filteredArticles.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-lg text-gray-600">No articles found matching your search criteria.</p>
+          <p className="text-lg text-gray-600">Aucun article ne correspond à votre recherche.</p>
           <button 
             className="mt-4 text-purple-500 font-medium hover:text-purple-700 transition"
             onClick={() => {
@@ -164,23 +169,22 @@ export default function Articles() {
               setActiveFilter('All');
             }}
           >
-            Clear filters
+            Nettoyer les filtres
           </button>
         </div>
       )}
 
-      {/* Articles Grid */}
       {!isLoading && filteredArticles.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredArticles.map((article) => (
-            <div 
-              key={article.id} 
+            <div
+              key={article.id}
               className="border border-gray-200 rounded-lg overflow-hidden shadow-xl hover:shadow-md transition-all duration-300"
             >
               <div className="flex flex-col md:flex-row h-full">
                 <div className="md:w-2/5 relative">
                   <img 
-                    src={article.image} 
+                    src={article.image}
                     alt={article.title}
                     className="w-full h-full object-cover"
                   />
@@ -198,10 +202,20 @@ export default function Articles() {
                     <div className="text-sm text-gray-500">
                       By {article.author} • {article.date}
                     </div>
-                    <button className="text-fuchsia-500 font-medium flex items-center hover:text-fuchsia-600 transition">
-                      Read more
-                      <ChevronRight size={16} className="ml-1" />
-                    </button>
+                    <div className="flex items-center gap-6 text-gray-500 text-sm">
+                      <div className="flex items-center gap-1">
+                        <MessageCircle size={16} /> {article.comments}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Eye size={16} /> {article.views}
+                      </div>
+                    </div>
+                    <Link to={article.link}>
+                      <button className="text-fuchsia-500 font-medium flex items-center hover:text-fuchsia-600 transition">
+                        Lire Plus
+                        <ChevronRight size={16} className="ml-1" />
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>
