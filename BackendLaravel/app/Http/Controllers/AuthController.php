@@ -157,5 +157,8 @@ public function index()
     return response()->json(User::all());
 }
     
-
+public function me()
+{
+    return response()->json(auth()->user());
+}
 }

@@ -1,28 +1,41 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Message;
+use App\Models\MessageUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\User;
 
 class MessageController extends Controller
 {
-    // For contact form (your current store method)
-    public function storeContact(Request $request)
+    public function unreadCount(Request $request)
     {
-        $validated = $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'email' => 'required|email',
-            'message' => 'required|string',
-            'consent' => 'required|boolean',
-        ]);
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Utilisateur non authentifié'
+                ], 401);
+            }
 
-        $message = Message::create($validated);
+            $count = MessageUser::where('recipient_id', $user->id)
+                            ->where('read', false)
+                            ->count();
 
-        return response()->json(['message' => 'Message reçu avec succès.'], 200);
+            return response()->json([
+                'success' => true,
+                'count' => $count
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Erreur dans unreadCount: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur serveur'
+            ], 500);
+        }
     }
-
     // For chat messages (used by MembersPage.jsx)
     public function storeChat(Request $request)
 {
@@ -56,7 +69,7 @@ class MessageController extends Controller
     }
     
     // Création du message
-    $message = Message::create([
+    $message = MessageUser::create([
         'sender_id' => auth()->id(),
         'recipient_id' => $recipientId,
         'content' => $content,
@@ -86,7 +99,7 @@ public function storeChatMessage(Request $request)
     }
     
     // Création du message
-    $message = Message::create([
+    $message = MessageUser::create([
         'sender_id' => auth()->id(),
         'recipient_id' => $request->recipient_id,
         'content' => $request->content,
@@ -99,7 +112,7 @@ public function storeChatMessage(Request $request)
     // Fetch messages for a user
     public function show($recipientId)
     {
-        $messages = Message::where(function ($query) use ($recipientId) {
+        $messages = MessageUser::where(function ($query) use ($recipientId) {
             $query->where('sender_id', auth()->id())
                   ->where('recipient_id', $recipientId);
         })->orWhere(function ($query) use ($recipientId) {

@@ -1,6 +1,7 @@
 import { useState, useEffect, memo } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import photo1 from  '/src/assets/images/1.jpeg'
 import {
   Clock,
   MessageCircle,
@@ -44,10 +45,10 @@ const fallbackData = {
     { name: 'Non lus', value: 8 },
   ],
   interactions: [
-    { id: 1, name: 'Sophie Martin', photo: '/api/placeholder/48/48', lastMessage: '15 min' },
-    { id: 2, name: 'Marie Dupont', photo: '/api/placeholder/48/48', lastMessage: '1 jour' },
-    { id: 3, name: 'Jeanne Dubois', photo: '/api/placeholder/48/48', lastMessage: '2 jours' },
-    { id: 4, name: 'Lucie Bernard', photo: '/api/placeholder/48/48', lastMessage: '3 jours' },
+    { id: 1, name: 'Sophie Martin', photo: {photo1}, lastMessage: '15 min' },
+    { id: 2, name: 'Marie Dupont', photo: {photo1}, lastMessage: '1 jour' },
+    { id: 3, name: 'Jeanne Dubois', photo: {photo1}, lastMessage: '2 jours' },
+    { id: 4, name: 'Lucie Bernard', photo: {photo1}, lastMessage: '3 jours' },
   ],
   articles: [
     { id: 1, title: 'Comment réussir sa vie professionnelle', readDate: '26 Avr 2025' },
@@ -83,7 +84,7 @@ export default function Dashboard() {
   const [userInfo, setUserInfo] = useState({
     id: null,
     name: 'Utilisateur inconnu',
-    photo: '/api/placeholder/40/40',
+    photo: {photo1},
   });
   const [stats, setStats] = useState({
     totalTime: '0h 0min',
@@ -142,7 +143,7 @@ export default function Dashboard() {
       if (error.response?.status === 401) {
         throw new Error('Session expirée. Veuillez vous reconnecter.');
       }
-      throw new Error(`Erreur lors de la récupération des données de ${url}: ${error.message}`);
+      throw new Error(`Erreur lors de la récupération des données de ${url}: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -231,6 +232,7 @@ export default function Dashboard() {
           postsResponse,
           eventsResponse,
           notificationsResponse,
+          
         ] = await Promise.all([
           fetchWithAuth('/me').catch(err => {
             console.error('Erreur user:', err);
@@ -267,7 +269,7 @@ export default function Dashboard() {
           name: userResponse.nom || userResponse.name || 'Utilisateur inconnu',
           photo: userResponse.photo
             ? `http://localhost:8000/storage/${userResponse.photo}`
-            : '/api/placeholder/40/40',
+            : {photo1},
         };
 
         const sessions = Array.isArray(sessionsResponse.data) ? sessionsResponse.data : [];
@@ -400,7 +402,7 @@ export default function Dashboard() {
                   name: participant?.name || 'Inconnu',
                   photo: participant?.photo
                     ? `http://localhost:8000/storage/${participant.photo}`
-                    : '/api/placeholder/48/48',
+                    : {photo1},
                   lastMessage,
                 };
               })
@@ -616,7 +618,7 @@ export default function Dashboard() {
                 src={userInfo.photo}
                 alt="Photo de profil"
                 className="w-full h-full object-cover"
-                onError={e => (e.target.src = '/api/placeholder/40/40')}
+                //onError={e => (e.target.src = {photo1})}
               />
             </div>
           </div>
@@ -627,7 +629,7 @@ export default function Dashboard() {
       <main className="flex-1 overflow-y-auto p-4 md:p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard Utilisateur</h1>
 
-        {/* Boutons pour simuler des actions */}
+        {/* Boutons pour simuler des actions 
         <div className="mb-6 flex space-x-4">
           <button
             onClick={simulateSendMessage}
@@ -647,7 +649,7 @@ export default function Dashboard() {
           >
             Simuler l'inscription à un événement
           </button>
-        </div>
+        </div>*/}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -803,7 +805,7 @@ export default function Dashboard() {
                           src={interaction.photo}
                           alt={interaction.name}
                           className="w-full h-full object-cover"
-                          onError={e => (e.target.src = '/api/placeholder/48/48')}
+                         // onError={e => (e.target.src = {photo1})}
                         />
                       </div>
                       <div className="ml-3 flex-1">

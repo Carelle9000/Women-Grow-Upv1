@@ -1,29 +1,80 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
+
+// Composant pour un lien de navigation
+const NavLink = React.memo(({ to, onClick, children }) => (
+  <li>
+    <Link to={to} onClick={onClick} className="text-white hover:text-purple-800 text-sm transition font-normal">
+      {children}
+    </Link>
+  </li>
+));
+
+// Composant pour un lien rapide
+const QuickLink = React.memo(({ path, anchor, label, onClick }) => (
+  <li>
+    <button onClick={() => onClick(path, anchor)} className="text-white hover:text-purple-900 text-sm font-normal">
+      {label}
+    </button>
+  </li>
+));
+
+// Composant pour un icône de réseau social
+const SocialIcon = React.memo(({ id, href, imageUrl, alt }) => (
+  <a key={id} href={href} className="block" aria-label={alt}>
+    <img src={imageUrl} alt={alt} className="w-8 aspect-square rounded-full" />
+  </a>
+));
 
 function Footer() {
   const [email, setEmail] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const closeMenu = () => setMenuOpen(false);
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const goToLogin = () => {
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const toggleMenu = useCallback(() => setMenuOpen(!menuOpen), [menuOpen]);
+  const goToLogin = useCallback(() => {
     navigate("/login");
-    setMenuOpen(false);
-  };
+    closeMenu();
+  }, [navigate, closeMenu]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     console.log("Subscribing email:", email);
     setEmail("");
-  };
+  }, [email]);
 
-  const handleRedirect = (path, anchor) => {
-    navigate(`${path}#${anchor}`);
-    setMenuOpen(false);
-  };
+  const handleRedirect = useCallback(
+    (path, anchor) => {
+      navigate(`${path}#${anchor}`);
+      closeMenu();
+    },
+    [navigate, closeMenu]
+  );
+
+  const navigationLinks = [
+    { path: "/", label: "Accueil" },
+    { path: "/about", label: "A Propos" },
+    { path: "/digithek", label: "Digithek" },
+    { path: "/cours", label: "Cours" },
+    { path: "/forum", label: "Forum" },
+    { path: "/contact", label: "Contact" },
+  ];
+
+  const quickLinks = [
+    { id: 'rejoindre', path: "/SignUp", label: "Nous Rejoindre" },
+    { id: 'actualites', path: "/", label: "Actualités" },
+    { id: 'realisations', path: "/", label: "Réalisations" },
+    { id: 'missions', path: "/about", label: "Missions" },
+    { id: 'urgence', path: "/report", label: "Urgence" },
+  ];
+
+  const socialMedia = [
+    { id: 1, href: "#social1", imageUrl: "https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/42ee014639fbf9394eb279d8a88d7db61ce0b6ac?placeholderIfAbsent=true", alt: "Facebook" },
+    { id: 2, href: "#social2", imageUrl: "https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/6104dd35917718ab2347228737bf06acb8af38f7?placeholderIfAbsent=true", alt: "Twitter" },
+    { id: 3, href: "#social3", imageUrl: "https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/4308de81ce11d8f59d36d73d21d7fedaaa965b89?placeholderIfAbsent=true", alt: "Instagram" },
+  ];
 
   return (
     <div className="bg-white">
@@ -37,25 +88,8 @@ function Footer() {
           <div className="flex flex-col items-end">
             <h3 className="text-lg font-semibold text-white mb-2">Réseaux sociaux</h3>
             <div className="flex gap-3">
-              {[1, 2, 3].map((item) => (
-                <a 
-                  key={item} 
-                  href={`#social${item}`} 
-                  className="block"
-                  aria-label={`Social Media Platform ${item}`}
-                >
-                  <img
-                    src={`https://cdn.builder.io/api/v1/image/assets/7e4be891996a4fcfbc2bf1727b9c1c94/${
-                      item === 1
-                        ? "42ee014639fbf9394eb279d8a88d7db61ce0b6ac"
-                        : item === 2
-                        ? "6104dd35917718ab2347228737bf06acb8af38f7"
-                        : "4308de81ce11d8f59d36d73d21d7fedaaa965b89"
-                    }?placeholderIfAbsent=true`}
-                    alt={`Social Media Icon ${item}`}
-                    className="w-8 aspect-square rounded-full"
-                  />
-                </a>
+              {socialMedia.map((icon) => (
+                <SocialIcon key={icon.id} {...icon} />
               ))}
             </div>
           </div>
@@ -68,23 +102,10 @@ function Footer() {
           <div>
             <h3 className="text-lg font-semibold text-white mb-2">Liens de Navigation</h3>
             <ul className="space-y-2">
-              {[
-                { path: "/", label: "Accueil" },
-                { path: "/about", label: "A Propos" },
-                { path: "/digithek", label: "Digithek" },
-                { path: "/cours", label: "Cours" },
-                { path: "/forum", label: "Forum" },
-                { path: "/contact", label: "Contact" },
-              ].map((link) => (
-                <li key={link.path}>
-                  <Link
-                    to={link.path}
-                    onClick={closeMenu}
-                    className="text-white hover:text-purple-800 text-sm transition font-normal"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
+              {navigationLinks.map((link) => (
+                <NavLink key={link.path} to={link.path} onClick={closeMenu}>
+                  {link.label}
+                </NavLink>
               ))}
             </ul>
           </div>
@@ -93,21 +114,8 @@ function Footer() {
           <div>
             <h3 className="text-lg font-semibold text-white mb-2">Liens Rapides</h3>
             <ul className="space-y-2">
-              {[
-                { path: "/SignUp",  label: "Nous Rejoindre" },
-                { path: "/",  label: "Actualités" },
-                { path: "/", label: "Réalisations" },
-                { path: "/about",label: "Missions" },
-                { path: "/report", label: "Urgence" },
-              ].map((link) => (
-                <li key={link.anchor}>
-                  <button
-                    onClick={() => handleRedirect(link.path, link.anchor)}
-                    className="text-white hover:text-purple-900 text-sm font-normal"
-                  >
-                    {link.label}
-                  </button>
-                </li>
+              {quickLinks.map((link) => (
+                <QuickLink key={link.id} {...link} onClick={handleRedirect} />
               ))}
             </ul>
           </div>

@@ -3,13 +3,13 @@
 
 @font-face {
   font-family: 'Tienne';
- // font-weight: normal;
+ /font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Tienne';
-  //font-weight: bold;
+  ont-weight: bold;
   font-style: normal;
 }
 *{

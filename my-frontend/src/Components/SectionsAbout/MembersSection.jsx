@@ -45,7 +45,7 @@ const MemberCard = ({ member }) => {
 const MembersSection = () => {
   return (
     <div className="bg-indigo-50  p-8">
-      <h1 className="text-2xl font-bold  text-fuchsia-700 mb-6">Nos  membres</h1>
+      <h1 className="text-2xl font-bold ml-5 text-fuchsia-700 mb-6">Nos  membres</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 ">
         {members.map((member, index) => (
           <MemberCard key={index} member={member} />

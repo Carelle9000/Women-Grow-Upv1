@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { Home, User, Users, Calendar, LogOut, Menu, X, FileText } from 'lucide-react';
+import {Link} from 'react-router-dom';
+import { Home, User, Calendar, LogOut, Menu, X } from 'lucide-react';
 
 function NavItem({ icon, text, active }) {
   return (
@@ -44,15 +45,7 @@ function SidebarContent() {
           />
         )}
       </NavLink>
-      <NavLink to="/memberspage">
-        {({ isActive }) => (
-          <NavItem
-            icon={<Users size={20} />}
-            text="Membres"
-            active={isActive}
-          />
-        )}
-      </NavLink>
+    
       <NavLink to="/calendar">
         {({ isActive }) => (
           <NavItem
@@ -62,15 +55,7 @@ function SidebarContent() {
           />
         )}
       </NavLink>
-      <NavLink to="/reports">
-        {({ isActive }) => (
-          <NavItem
-            icon={<FileText size={20} />}
-            text="Rapports"
-            active={isActive}
-          />
-        )}
-      </NavLink>
+      
       <div className="mt-10 px-3">
         <button
           onClick={handleLogout}
@@ -93,10 +78,12 @@ const DashboardLayout = () => {
       <div
         className={`${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } fixed inset-y-0 left-0 z-50 w-64 bg-fuchsia-800 text-white transition-transform duration-300 ease-in-out md:hidden`}
+        } fixed inset-y-0 left-0 z-50 w-64 bg-purple-800 text-white transition-transform duration-300 ease-in-out md:hidden`}
       >
-        <div className="flex justify-between items-center px-4 py-5 border-b border-fuchsia-700">
+        <div className="flex justify-between items-center px-4 py-5 border-b border-purple-700">
+          <Link to='/'>
           <div className="font-bold text-xl">Women Grow Up</div>
+          </Link>
           <button
             onClick={() => setIsSidebarOpen(false)}
             className="text-white"
@@ -109,9 +96,12 @@ const DashboardLayout = () => {
 
       {/* Sidebar - Desktop version */}
       <div className="hidden md:flex md:flex-col md:w-64 md:bg-fuchsia-800 md:text-white">
+        <Link to='/'>
         <div className="px-4 py-5 border-b border-fuchsia-700">
           <div className="font-bold text-xl">Women Grow Up</div>
         </div>
+        </Link>
+    
         <SidebarContent />
       </div>
 

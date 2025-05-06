@@ -2,19 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
 class MessageUser extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'sender_id',
-        'recipient_id',
+        'sender_id', 
+        'receiver_id',
         'content',
-        'timestamp',
+        'media_path',
+        'type',
+        'read'
     ];
 
-    protected $casts = [
-        'timestamp' => 'datetime',
-    ];
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'receiver_id');
+    }
 }

@@ -68,13 +68,13 @@ const Signup = () => {
     try {
       const response = await apiEND.post('/register', formData);
       console.log("succes", response.data);
-      setSuccess("Inscription réussie ! Redirection...");
+      setSuccess("Inscription réussie ! ");
 
       if (response.data.success) {
         setSuccess("Inscription réussie ! Redirection...");
         // Redirect after 2 seconds
         setTimeout(() => {
-          navigate("/Login");
+          navigate("/");
         }, 2000);
       }
     } catch (error) {
