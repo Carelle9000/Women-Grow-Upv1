@@ -16,7 +16,7 @@ const ActualitesSection = () => {
       description:
         "Une journée mémorable de célébration et d'engagement pour l'autonomisation des femmes.",
       image: "@/assets/images/fefie.webp",
-      lien: "/actualites/journee-femme",
+      //lien: "/actualites/journee-femme",
       taille: "grande",
       lien: {Article1},
     },
@@ -25,7 +25,7 @@ const ActualitesSection = () => {
       description:
         "Lancement de notre nouveau programme de mentorat pour les femmes entrepreneurs.",
       image: "@/assets/images/Mentorat.jpg",
-      lien: "/actualites/mentorat-2024",
+      //lien: "/actualites/mentorat-2024",
       taille: "petite",
       lien: {Article2},
     },
@@ -34,7 +34,7 @@ const ActualitesSection = () => {
       description:
         "Série d'ateliers pratiques sur le leadership et l'entrepreneuriat  au sein de la communaute feminine.",
       image: "@/assets/images/entrepreneuriat.jpg",
-      lien: "/actualites/ateliers-formation",
+      //lien: "/actualites/ateliers-formation",
       taille: "petite",
       lien: {Article3},
     },
