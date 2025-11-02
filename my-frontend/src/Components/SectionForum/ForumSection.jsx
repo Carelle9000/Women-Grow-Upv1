@@ -205,7 +205,7 @@ const ForumSection = () => {
   const handleCloseThematic = async (thematicSlug) => {
     try {
       await api.post(
-        `/forumრંઍ(forum/${thematicSlug}/close`,
+        `/forum/${thematicSlug}/close`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

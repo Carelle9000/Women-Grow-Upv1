@@ -9,10 +9,10 @@ use Illuminate\Support\Str;
 
 class ForumController extends Controller
 {
-    // Liste des sujets (GET /api/forum)
+    // 1 - Liste des sujets (GET /api/forum)
     public function index()
     {
-        $thematics = Thematic::with(['user', 'replies'])
+        $thematics = Thematic::with(['user', 'replies.user'])
                         ->open()
                         ->latest()
                         ->paginate(10);
@@ -23,27 +23,30 @@ class ForumController extends Controller
         ]);
     }
 
-    // Voir un sujet (GET /api/forum/{slug})
+    // 2 - Voir un sujet (GET /api/forum/{slug})
     public function show(Thematic $thematic)
     {
-        $thematic->load(['user', 'replies.user', 'replies.children.user']);
-
+        // Charger l'utilisateur, puis charger la relation 'replies'
+        // avec une contrainte qui charge récursivement tous les enfants.
+        $thematic->load(['user', 'replies' => function ($query) {
+            // Ceci utilise la relation 'childrenRecursive' que nous avons définie dans le modèle Reply.
+            $query->with('user', 'childrenRecursive');
+        }]);
         return response()->json([
             'success' => true,
             'data' => $thematic
         ]);
     }
 
-    // Ajouter des utilisateurs dans un sujet (POST /api/forum/{thematic}/users)
-
-        public function addUsers(Request $request, Thematic $thematic)
+    // 3 - Ajouter des utilisateurs dans un sujet (POST /api/forum/{thematic}/users)
+    public function addUsers(Request $request, Thematic $thematic)
     {
         $request->validate([
             'user_ids' => 'required|array',
             'user_ids.*' => 'exists:users,id'
         ]);
 
-        $thematic->users()->attach($request->user_ids);
+        $thematic->users()->attach($request->input('user_ids'));
 
         return response()->json([
             'success' => true,
@@ -51,8 +54,7 @@ class ForumController extends Controller
         ]);
     }
 
-
-    // Créer un sujet (POST /api/forum)
+    // 4 - Créer un sujet (POST /api/forum)
     public function store(Request $request)
     {
         $request->validate([
@@ -61,10 +63,10 @@ class ForumController extends Controller
         ]);
 
         $thematic = Thematic::create([
-            'title' => $request->title,
-            'content' => $request->content,
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
             'user_id' => auth()->id(),
-            'slug' => Str::slug($request->title),
+            'slug' => Str::slug($request->input('title')),
             'is_open' => true
         ]);
 
@@ -75,14 +77,12 @@ class ForumController extends Controller
         ], 201);
     }
 
-    // Fermer un sujet (POST /api/forum/{thematic}/close)
+    // 5 - Fermer un sujet (POST /api/forum/{thematic}/close)
     public function close(Thematic $thematic)
     {
+        // Idéalement, ceci devrait être géré par une Policy : $this->authorize('close', $thematic);
         if (auth()->id() !== $thematic->user_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Action non autorisée'
-            ], 403);
+            abort(403, 'Action non autorisée.');
         }
 
         $thematic->update(['is_open' => false]);
@@ -94,14 +94,11 @@ class ForumController extends Controller
         ]);
     }
 
-    // Ajouter une réponse (POST /api/forum/{thematic}/replies)
+    // 6 - Ajouter une réponse à un sujet (POST /api/forum/{thematic}/replies)
     public function storeReply(Request $request, Thematic $thematic)
     {
         if (!$thematic->is_open) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ce débat est clos'
-            ], 403);
+            abort(403, 'Ce débat est clos.');
         }
 
         $request->validate([
@@ -110,10 +107,10 @@ class ForumController extends Controller
         ]);
 
         $reply = Reply::create([
-            'content' => $request->content,
+            'content' => $request->input('content'),
             'thematic_id' => $thematic->id,
             'user_id' => auth()->id(),
-            'parent_id' => $request->parent_id
+            'parent_id' => $request->input('parent_id')
         ]);
 
         return response()->json([
@@ -123,88 +120,53 @@ class ForumController extends Controller
         ], 201);
     }
 
-    /**
- * Supprime un sujet (DELETE /api/forum/{thematic})
- */
-public function destroy(Thematic $thematic)
-{
-    // Vérifie que l'utilisateur est l'auteur ou un admin
-    if (auth()->id() !== $thematic->user_id && !auth()->user()->isAdmin()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Action non autorisée'
-        ], 403);
+    // 7 - Ajouter une réponse via slug (POST /api/forum/{slug}/replies)
+    public function storeReplyBySlug(Request $request, $slug)
+    {
+        $thematic = Thematic::where('slug', $slug)->firstOrFail();
+        return $this->storeReply($request, $thematic);
     }
 
-    // Supprime toutes les réponses associées
-    $thematic->replies()->delete();
-    
-    // Supprime le sujet
-    $thematic->delete();
+    // 8 - Modifier une réponse (PUT /api/forum/replies/{reply})
+    public function updateReply(Request $request, Reply $reply)
+    {
+        // Idéalement, ceci devrait être géré par une Policy : $this->authorize('update', $reply);
+        if (auth()->id() !== $reply->user_id) {
+            abort(403, 'Action non autorisée.');
+        }
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Sujet supprimé avec succès'
-    ]);
-}
+        $request->validate([
+            'content' => 'required|string|min:5'
+        ]);
 
-public function storeReplyBySlug(Request $request, $slug)
-{
-    $thematic = Thematic::where('slug', $slug)->firstOrFail();
+        $reply->update([
+            'content' => $request->input('content'),
+            'edited_at' => now()
+        ]);
 
-    if (!$thematic->is_open) {
         return response()->json([
-            'success' => false,
-            'message' => 'Ce débat est clos'
-        ], 403);
+            'success' => true,
+            'message' => 'Réponse mise à jour',
+            'data' => $reply
+        ]);
     }
 
-    $request->validate([
-        'content' => 'required|string|min:5',
-        'parent_id' => 'nullable|exists:replies,id',
-    ]);
+    // 9 - Supprimer un sujet (DELETE /api/forum/{thematic})
+    public function destroy(Thematic $thematic)
+    {
+        // Idéalement, ceci devrait être géré par une Policy : $this->authorize('delete', $thematic);
+        $user = auth()->user();
+        // Corrected authorization: Guests can't delete, and only owners or admins can.
+        if (!$user || ($user->id !== $thematic->user_id && !$user->hasRole('admin'))) {
+            abort(403, 'Action non autorisée.');
+        }
 
-    $reply = Reply::create([
-        'content' => $request->content,
-        'thematic_id' => $thematic->id,
-        'user_id' => auth()->id(),
-        'parent_id' => $request->parent_id
-    ]);
+         $thematic->replies()->delete();
+        $thematic->delete();
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Réponse ajoutée',
-        'data' => $reply
-    ], 201);
-}
-
-
-/**
- * Modifie une réponse (PUT /api/forum/replies/{reply})
- */
-public function updateReply(Request $request, Reply $reply)
-{
-    // Vérifie que l'utilisateur est l'auteur de la réponse
-    if (auth()->id() !== $reply->user_id) {
         return response()->json([
-            'success' => false,
-            'message' => 'Action non autorisée'
-        ], 403);
+            'success' => true,
+            'message' => 'Sujet supprimé avec succès'
+        ]);
     }
-
-    $request->validate([
-        'content' => 'required|string|min:5'
-    ]);
-
-    $reply->update([
-        'content' => $request->content,
-        'edited_at' => now() // Ajoute un marqueur d'édition
-    ]);
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Réponse mise à jour',
-        'data' => $reply
-    ]);
-}
 }

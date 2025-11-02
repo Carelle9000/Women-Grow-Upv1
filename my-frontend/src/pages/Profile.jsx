@@ -13,7 +13,7 @@ export default function Profile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('token');
     if (token) {
       async function fetchUser() {
         try {
@@ -37,7 +37,8 @@ export default function Profile() {
   const handleDelete = async () => {
     try {
       await apiEND.delete(`/users/${user.id}`);
-      localStorage.removeItem('authToken');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       setShowDeleteModal(false);
       setShowSuccessDelete(true);
       setTimeout(() => navigate("/signup"), 3000);

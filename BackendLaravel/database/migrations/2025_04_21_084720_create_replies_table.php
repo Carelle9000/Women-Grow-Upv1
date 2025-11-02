@@ -10,7 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {/*
+    {
         Schema::create('replies', function (Blueprint $table) {
             $table->id();
             $table->text('content');
@@ -19,7 +19,7 @@ return new class extends Migration
             //$table->foreignId('parent_id')->nullable()->constrained('replies')->onDelete('cascade');
             $table->timestamp('edited_at')->nullable();
             $table->timestamps();
-        });*/
+        });
     }
 
     /**

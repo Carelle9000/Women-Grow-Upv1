@@ -89,7 +89,7 @@ public function storeChatMessage(Request $request)
     ]);
     
     // Vérification manuelle que l'utilisateur existe
-    $recipient = User::find($request->recipient_id);
+    $recipient = User::find($request->input('recipient_id'));
     
     if (!$recipient) {
         return response()->json([
@@ -101,8 +101,8 @@ public function storeChatMessage(Request $request)
     // Création du message
     $message = MessageUser::create([
         'sender_id' => auth()->id(),
-        'recipient_id' => $request->recipient_id,
-        'content' => $request->content,
+        'recipient_id' => $request->input('recipient_id'),
+        'content' => $request->input('content'),
         'timestamp' => now(),
     ]);
     

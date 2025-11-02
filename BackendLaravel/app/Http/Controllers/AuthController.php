@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 //use App\Models\Role;
+use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,14 @@ class AuthController extends Controller
             'password_confirmation' => 'required|string|max:255',
         ]);
 
+        // Recherche du rôle 'user'. C'est plus robuste que de coder en dur un ID.
+        $userRole = Role::where('name', 'user')->first();
+
+        // Si le rôle n'existe pas, on ne peut pas créer l'utilisateur.
+        // Cela arrive si les seeders de la base de données n'ont pas été exécutés.
+        if (!$userRole) {
+            return response()->json(['message' => 'Configuration du système incomplète : le rôle "user" est manquant.'], 500);
+        }
 
         $user = User::create([
             'prenom' => $request->prenom,
@@ -44,7 +53,7 @@ class AuthController extends Controller
             'age' => $request->age,
             'pays' => $request->pays,
             'password' => Hash::make($request->password),
-            'role_id' => 2, // Assignation du rôle
+            'role_id' => $userRole->id, // Assignation du rôle
             
         ]);
 
@@ -65,8 +74,6 @@ class AuthController extends Controller
         ]);
 
         if (!Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $request->session()->regenerate(); // Créer une session
             return response()->json([
                 'message' => 'Identifiants invalides'
             ], 401);
@@ -75,7 +82,10 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)
                   ->with('role') // Charger la relation
                   ->firstOrFail();
+        $request->session()->regenerate();
 
+        $user = Auth::user()->load('role');
+        
         return response()->json([
             'user' => $user,
             'token' => $user->createToken('auth_token')->plainTextToken

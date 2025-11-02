@@ -3,18 +3,25 @@
 
 @font-face {
   font-family: 'Tienne';
- /font-weight: normal;
+  src: url('/fonts/Tienne.woff2') format('woff2'), 
+       url('/fonts/Tienne.woff') format('woff');
+  font-weight: bold;
   font-style: normal;
 }
 
+
 @font-face {
   font-family: 'Tienne';
-  ont-weight: bold;
+  src: url('/fonts/Tienne.woff2') format('woff2'), 
+       url('/fonts/Tienne.woff') format('woff');
+  font-weight: normal;
   font-style: normal;
 }
+
+
 *{
   font-family: 'Tienne';
-  //font-weight: bold;
+  font-weight: bold;
   font-style: normal;
 }
 

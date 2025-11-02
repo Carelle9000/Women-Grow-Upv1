@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     public function up()
-    {
+    {/*
         Schema::create('messagesusers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
@@ -18,10 +18,10 @@ return new class extends Migration
             $table->boolean('read')->default(false);
             $table->timestamps();
         });
-    }
+   */ }
 
     public function down()
-    {
+    {/*
         Schema::dropIfExists('messages');
-    }
+   */ }
 };

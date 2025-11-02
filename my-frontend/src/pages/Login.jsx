@@ -37,7 +37,7 @@ const Login = () => {
 
     try {
       const response = await apiEND.post("/login", form);
-      const { token } = response.data;
+      const { user, token } = response.data;
 
       localStorage.setItem("token", token);
       setSuccess("Connexion réussie ! Redirection...");

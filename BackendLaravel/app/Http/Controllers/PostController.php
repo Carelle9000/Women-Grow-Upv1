@@ -12,7 +12,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with('user')->latest()->get();
-        return response()->json(Post::all());
+        return response()->json($posts);
     }
 
     public function store(Request $request)
@@ -20,21 +20,19 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required_without:media',
             'content' => 'required_without:media',
-        
-            'media' => 'required_without:content|file|mimes:jpg,jpeg,png,mp4,mov,avi|max:20480' // 20MB max
+            'media' => 'required_without:content|file|mimes:jpg,jpeg,png,mp4,mov,avi|max:20480'
         ]);
 
         $post = new Post();
         $post->user_id = Auth::id();
-        $post->content = $request->content;
+        $post->title = $request->input('title');
+        $post->content = $request->input('content');
 
         if ($request->hasFile('media')) {
             $file = $request->file('media');
-            $path = $file->store('public/posts');
+            $path = $file->store('posts', 'public');
+            $post->media_path = $path;
             
-            $post->media_path = Storage::url($path);
-            
-            // Déterminer le type de média
             $mime = $file->getMimeType();
             $post->media_type = str_starts_with($mime, 'video') ? 'video' : 'image';
         } else {
@@ -47,65 +45,42 @@ class PostController extends Controller
             'status' => 'success',
             'data' => $post,
             'message' => 'Post créé avec succès'
-        ], 201);    }
-
-    public function destroy(Post $post)
-    {
-        // Vérifier que l'utilisateur est bien l'auteur du post
-        if (Auth::id() !== $post->user_id) {
-            abort(403);
-        }
-
-        // Supprimer le fichier média si nécessaire
-        if ($post->media_path) {
-            $path = str_replace('/storage', 'public', $post->media_path);
-            Storage::delete($path);
-        }
-
-        $post->delete();
-
-        return back()->with('success', 'Post supprimé avec succès!');
+        ], 201);
     }
 
-        public function showMedia($filename)
+    public function showMedia($filename)
     {
         $path = storage_path('app/public/posts/' . $filename);
-        
-        // Vérifier que le fichier existe
+
         if (!file_exists($path)) {
             abort(404);
         }
-        
 
         return response()->file($path, [
-            'Cache-Control' => 'public, max-age=31536000', // Cache 1 an
+            'Cache-Control' => 'public, max-age=31536000',
             'Content-Type' => mime_content_type($path),
         ]);
     }
 
-        public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post)
     {
-        // Validation simple sans vérification de permission
         $request->validate([
             'title' => 'required_without:media',
             'content' => 'required_without:media',
             'media' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov,avi|max:20480'
         ]);
 
-        // Mise à jour du contenu
-        $post->content = $request->input('content', $post->content);
         $post->title = $request->input('title', $post->title);
-        // Gestion du média
+        $post->content = $request->input('content', $post->content);
+
         if ($request->hasFile('media')) {
-            // Suppression ancien média
+            // Supprimer l’ancien média si existant
             if ($post->media_path) {
-                Storage::delete('public/'.$post->media_path);
+                Storage::disk('public')->delete($post->media_path);
             }
 
-            // Enregistrement nouveau média
             $file = $request->file('media');
             $path = $file->store('posts', 'public');
-            
             $post->media_path = $path;
             $post->media_type = str_starts_with($file->getMimeType(), 'video') ? 'video' : 'image';
         }
@@ -115,9 +90,25 @@ class PostController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $post,
-            'message' => 'Post modifie avec succès'
-        ], 201);    
+            'message' => 'Post modifié avec succès'
+        ], 201);
     }
 
+    public function destroy(Post $post)
+    {
+        if (Auth::id() !== $post->user_id) {
+            abort(403);
+        }
 
+        if ($post->media_path) {
+            Storage::disk('public')->delete($post->media_path);
+        }
+
+        $post->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Post supprimé avec succès'
+        ]);
+    }
 }

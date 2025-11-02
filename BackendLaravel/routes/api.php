@@ -31,23 +31,29 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'index']);
     Route::post('/logout', [AuthController::class, 'logout']);
     
+    Route::get('/me', [AuthController::class, 'me']); // Récupérer l'utilisateur authentifié
 });
 
 //Routes pour les posts
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
     Route::post('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::get('/posts/media/{filename}', [PostController::class, 'showMedia'])->name('posts.media');
 
 });
+    // Likes
+    Route::post('/posts/{post}/like', [LikeController::class, 'toggle']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']); // Fetch authenticated user
     Route::get('/posts', [PostController::class, 'index']);
     Route::get('/posts/{post}', [PostController::class, 'show']);
     Route::post('/posts/{post}/like', [LikeController::class, 'toggle']);
+    // Commentaires
     Route::post('/posts/{post}/comments', [CommentController::class, 'store']);
     Route::get('/posts/{post}/comments', [CommentController::class, 'show']);
     Route::get('/comments/{comment}/edit', [CommentController::class, 'edit']);
@@ -57,6 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // routes pour le calendrier
 
+// Routes pour le calendrier
 Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/events', [CalendarController::class, 'index']);        // Lister
@@ -66,6 +73,9 @@ Route::post('/events/{event}', [CalendarController::class, 'update']); // Mettre
 Route::delete('/events/{event}', [CalendarController::class, 'destroy']); // Supprimer
 Route::get('events/range/{start}/{end}', [CalendarController::class, 'getByRange']);
 Route::apiResource('events', CalendarController::class)->except(['show']);
+    // La route pour getByRange doit être définie avant apiResource pour être correctement interceptée.
+    Route::get('events/range/{start}/{end}', [CalendarController::class, 'getByRange']);
+    Route::apiResource('events', CalendarController::class);
 });
 
 //Routes pour le forum
@@ -80,7 +90,7 @@ Route::prefix('forum')->group(function () {
         Route::post('/', [ForumController::class, 'store']);
         Route::post('/{thematic}/close', [ForumController::class, 'close']);
         Route::post('/{slug}/replies', [ForumController::class, 'storeReplyBySlug']);
-        Route::post('/forum/{thematic}/users', [ForumController::class, 'addUsers']);
+        Route::post('/{thematic}/users', [ForumController::class, 'addUsers']);
         Route::delete('/{thematic}', [ForumController::class, 'destroy']);           // Supprimer un sujet    
          Route::put('/replies/{reply}', [ForumController::class, 'updateReply']);    // Modifier une réponse
 
@@ -121,17 +131,26 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/conversations', [ConversationController::class, 'store'])->name('conversations.store');
     Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->name('conversations.show');
     Route::put('/conversations/{conversation}', [ConversationController::class, 'update'])->name('conversations.update');
+    Route::put('/conversations/{conversation}', [ConversationController::class, 'update'])->name('conversations.update'); // Devrait probablement être POST pour les mises à jour avec form-data
     Route::delete('/conversations/{conversation}', [ConversationController::class, 'destroy'])->name('conversations.destroy');
 });
 
 // routes pour les messsages entre les utilisateurs
+// routes pour les messages entre les utilisateurs
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/messages', [MessageController::class, 'index']);
 Route::get('/members', [MemberController::class, 'index']);
 Route::post('/messages', [MessageUserController::class, 'storeChat']);
 Route::get('/messages/{recipientId}', [MessageUserController::class, 'show']);
 Route::get('/messages/unread-count', [MessageUserController::class, 'unreadCount']);
+    Route::get('/members', [MemberController::class, 'index']);
+    Route::post('/messages', [MessageController::class, 'storeChat']);
+    Route::get('/messages/{recipientId}', [MessageController::class, 'show']);
+    Route::get('/messages/unread-count', [MessageController::class, 'unreadCount']);
 });
+
+// Route pour le formulaire de contact (publique)
+Route::post('/contact', [MessageController::class, 'storeContact']);
 
 //routes pour les sessions
 Route::get('/sessions', [SessionController::class, 'index'])->middleware('auth:sanctum');
