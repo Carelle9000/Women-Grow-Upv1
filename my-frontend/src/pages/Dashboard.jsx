@@ -26,7 +26,7 @@ import {
 import TaskCalendar from './TaskCalendar';
 
 // Couleurs pour les graphiques
-const COLORS = ['#9c27b0', '#e91e63', '#5e35b1'];
+const COLORS = ['#a855f7', '#ec4899', '#7c3aed'];
 
 // Données de secours (fallback)
 const fallbackData = {
@@ -45,10 +45,10 @@ const fallbackData = {
     { name: 'Non lus', value: 8 },
   ],
   interactions: [
-    { id: 1, name: 'Sophie Martin', photo: {photo1}, lastMessage: '15 min' },
-    { id: 2, name: 'Marie Dupont', photo: {photo1}, lastMessage: '1 jour' },
-    { id: 3, name: 'Jeanne Dubois', photo: {photo1}, lastMessage: '2 jours' },
-    { id: 4, name: 'Lucie Bernard', photo: {photo1}, lastMessage: '3 jours' },
+    { id: 1, name: 'Sophie Martin', photo: photo1, lastMessage: '15 min' },
+    { id: 2, name: 'Marie Dupont', photo: photo1, lastMessage: '1 jour' },
+    { id: 3, name: 'Jeanne Dubois', photo: photo1, lastMessage: '2 jours' },
+    { id: 4, name: 'Lucie Bernard', photo: photo1, lastMessage: '3 jours' },
   ],
   articles: [
     { id: 1, title: 'Comment réussir sa vie professionnelle', readDate: '26 Avr 2025' },
@@ -84,7 +84,7 @@ export default function Dashboard() {
   const [userInfo, setUserInfo] = useState({
     id: null,
     name: 'Utilisateur inconnu',
-    photo: {photo1},
+    photo: photo1,
   });
   const [stats, setStats] = useState({
     totalTime: '0h 0min',
@@ -269,7 +269,7 @@ export default function Dashboard() {
           name: userResponse.nom || userResponse.name || 'Utilisateur inconnu',
           photo: userResponse.photo
             ? `http://localhost:8000/storage/${userResponse.photo}`
-            : {photo1},
+            : photo1,
         };
 
         const sessions = Array.isArray(sessionsResponse.data) ? sessionsResponse.data : [];
@@ -402,7 +402,7 @@ export default function Dashboard() {
                   name: participant?.name || 'Inconnu',
                   photo: participant?.photo
                     ? `http://localhost:8000/storage/${participant.photo}`
-                    : {photo1},
+                    : photo1,
                   lastMessage,
                 };
               })
@@ -530,10 +530,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-purple-50 via-fuchsia-50 to-white">
       {/* Top Bar */}
-      <header className="bg-white shadow-sm">
-        <div className="flex items-center justify-between px-4 py-3">
+      <header className="sticky top-0 z-20 bg-white/70 backdrop-blur-lg shadow-sm">
+        <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center">
             <div className="ml-4 md:ml-0">
               <div className="text-sm text-gray-500 capitalize">{currentDate}</div>
@@ -547,7 +547,7 @@ export default function Dashboard() {
             <div className="relative">
               <button
                 onClick={handleNotificationClick}
-                className="p-2 rounded-full hover:bg-gray-100 focus:outline-none"
+                className="p-2 rounded-full hover:bg-fuchsia-100/50 focus:outline-none transition-colors"
               >
                 <Bell className="text-gray-600" size={24} />
                 {notifications.count > 0 && (
@@ -556,7 +556,7 @@ export default function Dashboard() {
                   </span>
                 )}
               </button>
-              {notifications.showPopup && (
+              {notifications.showPopup && ( // Popup de notifications
                 <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                   <div className="p-4">
                     <div className="flex justify-between items-center mb-2">
@@ -599,7 +599,7 @@ export default function Dashboard() {
             <div className="relative">
               <button
                 onClick={handleMessagesClick}
-                className="p-2 rounded-full hover:bg-gray-100 focus:outline-none"
+                className="p-2 rounded-full hover:bg-fuchsia-100/50 focus:outline-none transition-colors"
               >
                 <MessageCircle className="text-gray-600" size={24} />
                 {messages.count > 0 && (
@@ -613,12 +613,12 @@ export default function Dashboard() {
               <div className="text-sm text-gray-500">Bienvenue,</div>
               <div className="font-semibold">{userInfo.name}</div>
             </div>
-            <div className="w-10 h-10 rounded-full bg-fuchsia-200 flex items-center justify-center overflow-hidden">
+            <div className="w-11 h-11 rounded-full bg-fuchsia-200 flex items-center justify-center overflow-hidden ring-2 ring-fuchsia-300 ring-offset-2">
               <img
                 src={userInfo.photo}
                 alt="Photo de profil"
                 className="w-full h-full object-cover"
-                //onError={e => (e.target.src = {photo1})}
+                onError={e => { e.target.onerror = null; e.target.src = photo1; }}
               />
             </div>
           </div>
@@ -626,8 +626,8 @@ export default function Dashboard() {
       </header>
 
       {/* Dashboard Content */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard Utilisateur</h1>
+      <main className="flex-1 overflow-y-auto p-6 md:p-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">Votre Espace Personnel</h1>
 
         {/* Boutons pour simuler des actions 
         <div className="mb-6 flex space-x-4">
@@ -652,11 +652,11 @@ export default function Dashboard() {
         </div>*/}
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Temps total"
             value={stats.totalTime}
-            icon={<Clock className="text-purple-600" />}
+            icon={<Clock className="text-purple-500" />}
             isLoading={isLoading}
           />
           <StatCard
@@ -668,18 +668,17 @@ export default function Dashboard() {
           <StatCard
             title="Messages"
             value={stats.messages}
-            icon={<MessageCircle className="text-violet-600" />}
+            icon={<MessageCircle className="text-violet-500" />}
             isLoading={isLoading}
           />
           <StatCard
             title="Articles lus"
             value={stats.articlesRead}
-            icon={<BookOpen className="text-fuchsia-500" />}
+            icon={<BookOpen className="text-pink-500" />}
             isLoading={isLoading}
           />
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-6">
             <p>{error}</p>
@@ -687,7 +686,7 @@ export default function Dashboard() {
         )}
 
         {/* Loader */}
-        {isLoading ? (
+        {isLoading && !localStorage.getItem('dashboardData') ? (
           <div className="flex justify-center items-center h-40">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-fuchsia-600"></div>
           </div>
@@ -695,15 +694,15 @@ export default function Dashboard() {
           <>
             {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-xl shadow-sm p-4">
                 <h2 className="text-lg font-semibold text-gray-700 mb-4">Activité sur le forum</h2>
                 <div className="mb-3 flex justify-end space-x-4 text-sm">
                   <div className="flex items-center">
-                    <div className="w-3 h-3 bg-purple-600 rounded-sm mr-1"></div>
+                    <div className="w-3 h-3 bg-purple-500 rounded-sm mr-2"></div>
                     <span>Sujets</span>
                   </div>
                   <div className="flex items-center">
-                    <div className="w-3 h-3 bg-fuchsia-400 rounded-sm mr-1"></div>
+                    <div className="w-3 h-3 bg-pink-500 rounded-sm mr-2"></div>
                     <span>Réponses</span>
                   </div>
                 </div>
@@ -712,7 +711,7 @@ export default function Dashboard() {
                     data={forumActivityData}
                     margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
                     <XAxis dataKey="name" stroke="#666" />
                     <YAxis stroke="#666" />
                     <Tooltip
@@ -721,16 +720,15 @@ export default function Dashboard() {
                       }
                       labelFormatter={label => `Jour: ${label}`}
                     />
-                    <Bar dataKey="posts" name="Sujets" fill="#9c27b0" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="replies" name="Réponses" fill="#e91e63" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="posts" name="Sujets" fill="#a855f7" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="replies" name="Réponses" fill="#ec4899" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
                 <div className="mt-4 text-sm text-gray-600 text-center">
                   Activité hebdomadaire - Sujets et réponses par jour
                 </div>
               </div>
-
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-xl shadow-sm p-4">
                 <h2 className="text-lg font-semibold text-gray-700 mb-4">Statistiques de messages</h2>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
@@ -756,11 +754,11 @@ export default function Dashboard() {
             </div>
 
             {/* Events Section */}
-            <div className="bg-white rounded-lg shadow p-4 mb-6">
+            <div className="bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-xl shadow-sm p-6 mb-8">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold text-gray-700">Événements à venir</h2>
                 <NavLink
-                  to="/calendar"
+                  to="/events"
                   className="text-fuchsia-600 hover:text-fuchsia-800 text-sm font-medium flex items-center"
                 >
                   <span>Voir le calendrier</span>
@@ -772,11 +770,11 @@ export default function Dashboard() {
                 {events.map(event => (
                   <div
                     key={event.id}
-                    className="border border-indigo-100 rounded-lg p-4 hover:shadow-md transition-shadow"
+                    className="bg-white border-l-4 border-fuchsia-400 rounded-r-lg p-4 hover:shadow-lg hover:border-fuchsia-500 transition-all duration-300 group"
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-fuchsia-700">{event.title}</h3>
-                      <div className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs">
+                      <h3 className="font-semibold text-gray-800 group-hover:text-fuchsia-700">{event.title}</h3>
+                      <div className="bg-fuchsia-100 text-fuchsia-800 px-2 py-1 rounded-full text-xs font-medium">
                         {event.date}
                       </div>
                     </div>
@@ -792,20 +790,20 @@ export default function Dashboard() {
 
             {/* Lists Section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-xl shadow-sm p-4">
                 <h2 className="text-lg font-semibold text-gray-700 mb-4">Interactions récentes</h2>
                 <ul className="space-y-3">
                   {interactions.map(interaction => (
                     <li
                       key={interaction.id}
-                      className="flex items-center p-2 hover:bg-indigo-50 rounded-md"
+                      className="flex items-center p-2 hover:bg-fuchsia-50/70 rounded-lg transition-colors"
                     >
                       <div className="w-10 h-10 rounded-full overflow-hidden">
                         <img
                           src={interaction.photo}
                           alt={interaction.name}
                           className="w-full h-full object-cover"
-                         // onError={e => (e.target.src = {photo1})}
+                          onError={e => { e.target.onerror = null; e.target.src = photo1; }}
                         />
                       </div>
                       <div className="ml-3 flex-1">
@@ -817,19 +815,18 @@ export default function Dashboard() {
                 </ul>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-xl shadow-sm p-4">
                 <h2 className="text-lg font-semibold text-gray-700 mb-4">Articles récemment lus</h2>
                 <ul className="space-y-3">
                   {articles.map(article => (
-                    <li key={article.id} className="p-2 hover:bg-indigo-50 rounded-md">
-                      <div className="font-medium text-fuchsia-700">{article.title}</div>
+                    <li key={article.id} className="p-2 hover:bg-fuchsia-50/70 rounded-lg transition-colors">
+                      <div className="font-medium text-gray-800">{article.title}</div>
                       <div className="text-sm text-gray-500">Lu le {article.readDate}</div>
                     </li>
                   ))}
                 </ul>
               </div>
-
-              <div className="bg-white rounded-lg shadow p-4">
+              <div className="bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-xl shadow-sm p-4">
                 <h2 className="text-lg font-semibold text-gray-700 mb-4">Historique de connexion</h2>
                 <div className="overflow-x-auto">
                   <table className="min-w-full">
@@ -842,7 +839,7 @@ export default function Dashboard() {
                     </thead>
                     <tbody>
                       {sessionLogs.map((log, index) => (
-                        <tr key={index} className="border-b border-gray-100">
+                        <tr key={index} className="border-b border-gray-200/50 last:border-b-0">
                           <td className="py-2 text-sm">{log.date}</td>
                           <td className="py-2 text-sm">{log.duration}</td>
                           <td className="py-2 text-sm">{log.activity}</td>
@@ -860,18 +857,18 @@ export default function Dashboard() {
   );
 }
 
-// Mémoïsation du composant StatCard pour éviter les rendus inutiles
+// Memoization of the StatCard component to avoid unnecessary re-renders
 const StatCard = memo(function StatCard({ title, value, icon, isLoading }) {
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className="bg-white/50 backdrop-blur-sm border border-gray-200/50 rounded-xl shadow-sm p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       <div className="flex items-center">
-        <div className="rounded-full w-12 h-12 flex items-center justify-center bg-indigo-50">
+        <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-fuchsia-100 to-purple-100">
           {icon}
         </div>
         <div className="ml-4">
           <h3 className="text-gray-500 text-sm">{title}</h3>
           {isLoading ? (
-            <div className="animate-pulse bg-gray-200 h-6 w-20 rounded"></div>
+            <div className="animate-pulse bg-gray-300 h-7 w-24 rounded-md mt-1"></div>
           ) : (
             <p className="font-bold text-xl">{value}</p>
           )}
